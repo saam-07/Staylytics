@@ -1,122 +1,119 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
-import './App.css'
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Navbar from "./components/Navbar";
+import Footer from "./components/Footer";
+import Hero from "./components/Hero";
+import Card from "./components/Card";
 
-function App() {
-  const [count, setCount] = useState(0)
+const features = [
+  { number: "01", title: "Sentiment Classification", description: "Each review is classified as positive, neutral, or negative — instantly, without manual effort." },
+  { number: "02", title: "Theme Detection", description: "Surfaces what guests are actually talking about — food, cleanliness, host, location, and more." },
+  { number: "03", title: "Response Drafting", description: "Generates a ready-to-send professional reply for each review. Edit the tone, then save it." },
+  { number: "04", title: "Review History", description: "A searchable log of all analyzed reviews, filterable by sentiment and theme." },
+  { number: "05", title: "Insights Dashboard", description: "A clear visual summary of sentiment trends, top complaints, and recurring guest praise." },
+  { number: "06", title: "Improvement Suggestions", description: "Concrete, AI-generated actions based on your review patterns — not generic advice." },
+];
 
+function Home() {
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
+    <main>
+      <Hero />
+
+      {/* Mock review strip — unique element */}
+      <div className="bg-white border-y border-stone-200 px-6 py-5">
+        <div className="max-w-5xl mx-auto flex gap-4 overflow-x-auto scrollbar-none">
+          {[
+            { text: "Breakfast was incredible — felt like home.", badge: "Positive", color: "text-green-700 bg-green-50 border-green-100" },
+            { text: "WiFi keeps dropping, very frustrating.", badge: "Negative", color: "text-red-600 bg-red-50 border-red-100" },
+            { text: "Good stay overall but room was average.", badge: "Neutral", color: "text-amber-700 bg-amber-50 border-amber-100" },
+            { text: "Host was warm, local food outstanding.", badge: "Positive", color: "text-green-700 bg-green-50 border-green-100" },
+          ].map((r, i) => (
+            <div key={i} className="flex items-center gap-3 shrink-0 bg-stone-50 border
+                                    border-stone-200 rounded-xl px-4 py-3 max-w-xs">
+              <p className="text-stone-600 text-xs italic leading-relaxed">"{r.text}"</p>
+              <span className={`text-xs font-semibold px-2.5 py-1 rounded-full border
+                               shrink-0 ${r.color}`}>
+                {r.badge}
+              </span>
+            </div>
+          ))}
         </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.jsx</code> and save to test <code>HMR</code>
+      </div>
+
+      {/* Features */}
+      <section className="bg-stone-50 py-20 px-6">
+        <div className="max-w-5xl mx-auto">
+
+          <div className="mb-12">
+            <p className="text-amber-600 text-xs font-semibold uppercase tracking-widest mb-3">
+              — What Staylytics does
+            </p>
+            <h2 className="text-amber-950 font-bold"
+              style={{ fontFamily: "'Playfair Display', serif", fontSize: "clamp(1.8rem, 3vw, 2.4rem)" }}>
+              Six capabilities, one platform.
+            </h2>
+          </div>
+
+          {/* Two column list */}
+          <div className="grid md:grid-cols-2 gap-x-16">
+            {features.map((f) => <Card key={f.number} {...f} />)}
+          </div>
+        </div>
+      </section>
+
+      {/* How it works */}
+      <section className="bg-amber-950 py-20 px-6">
+        <div className="max-w-5xl mx-auto">
+          <p className="text-amber-400 text-xs font-semibold uppercase tracking-widest mb-10">
+            — How it works
           </p>
-        </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
 
-      <div className="ticks"></div>
-
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
+          <div className="grid md:grid-cols-3 gap-10">
+            {[
+              { n: "01", title: "Paste the review", desc: "Copy any guest review from your booking platform and paste it in." },
+              { n: "02", title: "AI analyzes it", desc: "Sentiment, themes, and a suggested response are generated in seconds." },
+              { n: "03", title: "Act on it", desc: "Edit the response, save it, and track patterns over time." },
+            ].map((s) => (
+              <div key={s.n} className="border-t border-amber-800 pt-6">
+                <div className="text-amber-700 font-bold text-3xl mb-4"
+                  style={{ fontFamily: "'Playfair Display', serif" }}>
+                  {s.n}
+                </div>
+                <h3 className="text-white font-semibold text-base mb-2">{s.title}</h3>
+                <p className="text-amber-400/70 text-sm leading-relaxed">{s.desc}</p>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
-
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
-  )
+    </main>
+  );
 }
 
-export default App
+function Placeholder({ title }) {
+  return (
+    <main className="max-w-5xl mx-auto px-6 py-24 text-center">
+      <h1 className="text-2xl font-bold text-amber-900 mb-3"
+        style={{ fontFamily: "'Playfair Display', serif" }}>
+        {title}
+      </h1>
+      <p className="text-stone-400 text-sm">Coming soon — in development.</p>
+    </main>
+  );
+}
+
+export default function App() {
+  return (
+    <BrowserRouter>
+      <div className="min-h-screen flex flex-col bg-stone-50">
+        <Navbar />
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/dashboard" element={<Placeholder title="Dashboard" />} />
+          <Route path="/reviews" element={<Placeholder title="Review Analyzer" />} />
+          <Route path="/about" element={<Placeholder title="About Staylytics" />} />
+        </Routes>
+        <Footer />
+      </div>
+    </BrowserRouter>
+  );
+}
