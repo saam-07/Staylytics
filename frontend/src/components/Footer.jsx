@@ -28,7 +28,7 @@ export default function Footer() {
           <p className="text-amber-700 text-xs">
             © 2026 Staylytics · TBI GEU Summer Internship
           </p>
-          <p className="text-amber-700 text-xs">Powered by Gemini AI</p>
+      
         </div>
       </div>
     </footer>

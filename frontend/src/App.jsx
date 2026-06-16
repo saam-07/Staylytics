@@ -19,29 +19,34 @@ function Home() {
       <Hero />
 
       {/* Mock review strip — unique element */}
-      <div className="bg-white border-y border-stone-200 px-6 py-5">
-        <div className="max-w-5xl mx-auto flex gap-4 overflow-x-auto scrollbar-none">
-          {[
-            { text: "Breakfast was incredible — felt like home.", badge: "Positive", color: "text-green-700 bg-green-50 border-green-100" },
-            { text: "WiFi keeps dropping, very frustrating.", badge: "Negative", color: "text-red-600 bg-red-50 border-red-100" },
-            { text: "Good stay overall but room was average.", badge: "Neutral", color: "text-amber-700 bg-amber-50 border-amber-100" },
-            { text: "Host was warm, local food outstanding.", badge: "Positive", color: "text-green-700 bg-green-50 border-green-100" },
-          ].map((r, i) => (
-            <div key={i} className="flex items-center gap-3 shrink-0 bg-stone-50 border
-                                    border-stone-200 rounded-xl px-4 py-3 max-w-xs">
-              <p className="text-stone-600 text-xs italic leading-relaxed">"{r.text}"</p>
-              <span className={`text-xs font-semibold px-2.5 py-1 rounded-full border
-                               shrink-0 ${r.color}`}>
-                {r.badge}
-              </span>
-            </div>
-          ))}
+      <div className="bg-white border-y border-stone-200 px-8 py-6">
+        <div className="max-w-7xl mx-auto">
+          <p className="text-stone-400 text-xs uppercase tracking-widest font-semibold mb-4">
+            Sample analyzed reviews
+          </p>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            {[
+              { text: "Breakfast was incredible — felt like home.", badge: "Positive", color: "text-green-700 bg-green-50 border-green-100" },
+              { text: "WiFi keeps dropping, very frustrating.", badge: "Negative", color: "text-red-600 bg-red-50 border-red-100" },
+              { text: "Good stay overall but room was average.", badge: "Neutral", color: "text-amber-700 bg-amber-50 border-amber-100" },
+              { text: "Host was warm, local food outstanding.", badge: "Positive", color: "text-green-700 bg-green-50 border-green-100" },
+            ].map((r, i) => (
+              <div key={i} className="bg-stone-50 border border-stone-200 rounded-xl px-4 py-3
+                                      flex flex-col gap-2">
+                <p className="text-stone-600 text-xs italic leading-relaxed">"{r.text}"</p>
+                <span className={`text-xs font-semibold px-2.5 py-1 rounded-full border
+                                 self-start ${r.color}`}>
+                  {r.badge}
+                </span>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
 
       {/* Features */}
-      <section className="bg-stone-50 py-20 px-6">
-        <div className="max-w-5xl mx-auto">
+      <section className="bg-stone-50 py-20 px-8">
+        <div className="max-w-7xl mx-auto">
 
           <div className="mb-12">
             <p className="text-amber-600 text-xs font-semibold uppercase tracking-widest mb-3">
@@ -64,7 +69,7 @@ function Home() {
       <section className="bg-amber-950 py-20 px-6">
         <div className="max-w-5xl mx-auto">
           <p className="text-amber-400 text-xs font-semibold uppercase tracking-widest mb-10">
-            — How it works
+            How it works
           </p>
 
           <div className="grid md:grid-cols-3 gap-10">
@@ -91,7 +96,7 @@ function Home() {
 
 function Placeholder({ title }) {
   return (
-    <main className="max-w-5xl mx-auto px-6 py-24 text-center">
+    <main className="max-w-7xl mx-auto px-8 py-24 text-center">
       <h1 className="text-2xl font-bold text-amber-900 mb-3"
         style={{ fontFamily: "'Playfair Display', serif" }}>
         {title}

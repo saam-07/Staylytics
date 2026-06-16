@@ -7,7 +7,7 @@ export default function Hero() {
 
         {/* Tag line */}
         <p className="text-amber-400 text-sm font-semibold uppercase tracking-widest mb-6">
-          — AI Review Analytics for Homestays
+          AI Review Analytics for Homestays
         </p>
 
         {/* Headline */}
@@ -23,7 +23,7 @@ export default function Hero() {
         {/* Subtext */}
         <p className="text-amber-200/60 text-lg leading-relaxed mb-10 max-w-xl">
           Paste any guest review and get instant sentiment analysis, theme tags,
-          and a professional response draft — all powered by Gemini AI.
+          and a professional response draft built for homestay businesses across Uttarakhand.
         </p>
 
         {/* Buttons */}
@@ -45,7 +45,7 @@ export default function Hero() {
           {[
             { val: "3 sec", label: "Analysis time" },
             { val: "6", label: "Theme categories" },
-            { val: "Gemini", label: "AI engine" },
+          
           ].map((s) => (
             <div key={s.label}>
               <div className="text-amber-300 font-bold text-xl mb-1"
