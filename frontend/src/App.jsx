@@ -94,14 +94,16 @@ function Home() {
   );
 }
 
-function Placeholder({ title }) {
+function Placeholder({ title, description }) {
   return (
-    <main className="max-w-7xl mx-auto px-8 py-24 text-center">
-      <h1 className="text-2xl font-bold text-amber-900 mb-3"
+    <main className="flex-1 max-w-7xl mx-auto px-8 py-24 text-center">
+      <h1 className="text-3xl font-bold text-amber-900 mb-4"
         style={{ fontFamily: "'Playfair Display', serif" }}>
         {title}
       </h1>
-      <p className="text-stone-400 text-sm">Coming soon — in development.</p>
+      <p className="text-stone-500 text-base max-w-md mx-auto leading-relaxed">
+        {description}
+      </p>
     </main>
   );
 }
@@ -113,9 +115,9 @@ export default function App() {
         <Navbar />
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/dashboard" element={<Placeholder title="Dashboard" />} />
-          <Route path="/reviews" element={<Placeholder title="Review Analyzer" />} />
-          <Route path="/about" element={<Placeholder title="About Staylytics" />} />
+          <Route path="/dashboard" element={<Placeholder title="Dashboard" description="Your review analytics and sentiment trends will appear here. Currently in development." />} />
+          <Route path="/reviews" element={<Placeholder title="Review Analyzer" description="Paste guest reviews here to get instant AI-powered sentiment analysis, theme tags, and response suggestions." />} />
+          <Route path="/about" element={<Placeholder title="About Staylytics" description="Staylytics is an AI-powered review analytics platform built for homestay businesses across Uttarakhand, developed during the TBI GEU Summer Internship 2026." />} />
         </Routes>
         <Footer />
       </div>
