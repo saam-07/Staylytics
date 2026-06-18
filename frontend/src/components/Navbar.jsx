@@ -1,55 +1,104 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link} from "react-router-dom";
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
 
+
+  
+
   return (
-    <nav className="bg-white border-b border-stone-200 sticky top-0 z-50">
+    <nav
+      className="fixed top-0 left-0 w-full z-50 transition-all duration-300"
+      style={{
+  backgroundColor: "#ffffff",
+  borderBottom: "1px solid #f0e6e0",
+  boxShadow: "0 2px 8px rgba(0,0,0,0.06)",
+}}
+    >
       <div className="max-w-7xl mx-auto px-8 py-4 flex justify-between items-center">
-        
+
         {/* Logo */}
-        <Link to="/" className="text-xl font-bold text-amber-900"
-          style={{ fontFamily: "'Playfair Display', serif" }}>
+        <Link
+          to="/"
+          className="text-xl font-bold transition-colors duration-300"
+          style={{
+            fontFamily: "'Playfair Display', serif",
+            color: "#2d1515",
+          }}
+        >
           Staylytics
         </Link>
 
         {/* Desktop links */}
-        <div className="hidden md:flex items-center gap-8 text-sm font-medium text-stone-500">
-          <Link to="/" className="hover:text-amber-800 transition-colors">Home</Link>
-          <Link to="/dashboard" className="hover:text-amber-800 transition-colors">Dashboard</Link>
-          <Link to="/reviews" className="hover:text-amber-800 transition-colors">Reviews</Link>
-          <Link to="/about" className="hover:text-amber-800 transition-colors">About</Link>
-          <Link to="/reviews"
-            className="bg-amber-800 text-white px-5 py-2 rounded-lg
-                       hover:bg-amber-700 transition-colors font-semibold">
+        <div className="hidden md:flex items-center gap-8 text-sm font-medium">
+          {["Home", "Dashboard", "Reviews", "About"].map((item) => (
+            <Link
+              key={item}
+              to={item === "Home" ? "/" : `/${item.toLowerCase()}`}
+              className="transition-colors duration-300 hover:opacity-70"
+              style={{ color: "#7a5c5c" }}
+            >
+              {item}
+            </Link>
+          ))}
+          <Link
+            to="/reviews"
+            className="text-white text-sm font-semibold px-5 py-2 rounded-lg
+                       hover:opacity-90 hover:-translate-y-0.5 transition-all duration-200"
+            style={{ backgroundColor: "#9b2335" }}
+          >
             Analyze Reviews
           </Link>
         </div>
 
-        {/* Mobile hamburger */}
+        {/* Hamburger */}
         <button
           onClick={() => setOpen(!open)}
           className="md:hidden flex flex-col gap-1.5 p-2"
           aria-label="Toggle menu"
         >
-          <span className={`block w-5 h-0.5 bg-stone-600 transition-all ${open ? "rotate-45 translate-y-2" : ""}`} />
-          <span className={`block w-5 h-0.5 bg-stone-600 transition-all ${open ? "opacity-0" : ""}`} />
-          <span className={`block w-5 h-0.5 bg-stone-600 transition-all ${open ? "-rotate-45 -translate-y-2" : ""}`} />
+          {[
+            open ? "rotate-45 translate-y-2" : "",
+            open ? "opacity-0" : "",
+            open ? "-rotate-45 -translate-y-2" : "",
+          ].map((cls, i) => (
+            <span
+              key={i}
+              className={`block w-5 h-0.5 transition-all duration-300 ${cls}`}
+              style={{ backgroundColor: "#2d1515" }}
+            />
+          ))}
         </button>
       </div>
 
       {/* Mobile menu */}
       {open && (
-        <div className="md:hidden border-t border-stone-100 px-6 py-4 flex flex-col gap-3
-                        text-sm font-medium text-stone-600 bg-white">
-          <Link to="/" onClick={() => setOpen(false)} className="hover:text-amber-800">Home</Link>
-          <Link to="/dashboard" onClick={() => setOpen(false)} className="hover:text-amber-800">Dashboard</Link>
-          <Link to="/reviews" onClick={() => setOpen(false)} className="hover:text-amber-800">Reviews</Link>
-          <Link to="/about" onClick={() => setOpen(false)} className="hover:text-amber-800">About</Link>
-          <Link to="/reviews" onClick={() => setOpen(false)}
-            className="bg-amber-800 text-white px-5 py-2.5 rounded-lg
-                       text-center font-semibold hover:bg-amber-700 transition-colors mt-1">
+        <div
+          className="md:hidden px-6 py-4 flex flex-col gap-3 text-sm font-medium"
+          style={{
+            backgroundColor: "#ffffff",
+            borderTop: "1px solid #f0e6e0",
+            color: "#7a5c5c",
+          }}
+        >
+          {["Home", "Dashboard", "Reviews", "About"].map((item) => (
+            <Link
+              key={item}
+              to={item === "Home" ? "/" : `/${item.toLowerCase()}`}
+              onClick={() => setOpen(false)}
+              style={{ color: "#7a5c5c" }}
+            >
+              {item}
+            </Link>
+          ))}
+          <Link
+            to="/reviews"
+            onClick={() => setOpen(false)}
+            className="text-white font-semibold px-5 py-2.5 rounded-lg text-center
+                       mt-1 hover:opacity-90 transition-opacity"
+            style={{ backgroundColor: "#9b2335" }}
+          >
             Analyze Reviews
           </Link>
         </div>

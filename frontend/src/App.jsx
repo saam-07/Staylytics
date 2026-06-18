@@ -18,24 +18,37 @@ function Home() {
     <main>
       <Hero />
 
-      {/* Mock review strip — unique element */}
-      <div className="bg-white border-y border-stone-200 px-8 py-6">
+      {/* Review strip — warm blush, not stark white */}
+      <div
+        className="px-8 py-8"
+        style={{ backgroundColor: "#fdf0f2", borderTop: "1px solid #f0d8dc", borderBottom: "1px solid #f0d8dc" }}
+      >
         <div className="max-w-7xl mx-auto">
-          <p className="text-stone-400 text-xs uppercase tracking-widest font-semibold mb-4">
+          <p
+            className="text-xs uppercase tracking-widest font-semibold mb-5"
+            style={{ color: "#c4736a" }}
+          >
             Sample analyzed reviews
           </p>
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {[
-              { text: "Breakfast was incredible — felt like home.", badge: "Positive", color: "text-green-700 bg-green-50 border-green-100" },
-              { text: "WiFi keeps dropping, very frustrating.", badge: "Negative", color: "text-red-600 bg-red-50 border-red-100" },
-              { text: "Good stay overall but room was average.", badge: "Neutral", color: "text-amber-700 bg-amber-50 border-amber-100" },
-              { text: "Host was warm, local food outstanding.", badge: "Positive", color: "text-green-700 bg-green-50 border-green-100" },
+              { text: "Breakfast was incredible — felt like home.", badge: "Positive", bg: "#f0faf0", color: "#2d6a2d", border: "#c3e6c3" },
+              { text: "WiFi keeps dropping, very frustrating.", badge: "Negative", bg: "#fdf0f0", color: "#9b2335", border: "#f0c4c8" },
+              { text: "Good stay overall but room was average.", badge: "Neutral", bg: "#fdf8f0", color: "#8a6a2a", border: "#f0e0b8" },
+              { text: "Host was warm, local food outstanding.", badge: "Positive", bg: "#f0faf0", color: "#2d6a2d", border: "#c3e6c3" },
             ].map((r, i) => (
-              <div key={i} className="bg-stone-50 border border-stone-200 rounded-xl px-4 py-3
-                                      flex flex-col gap-2">
-                <p className="text-stone-600 text-xs italic leading-relaxed">"{r.text}"</p>
-                <span className={`text-xs font-semibold px-2.5 py-1 rounded-full border
-                                 self-start ${r.color}`}>
+              <div
+                key={i}
+                className="rounded-xl px-4 py-4 flex flex-col gap-3"
+                style={{ backgroundColor: "#fff", border: "1px solid #f0d8dc" }}
+              >
+                <p className="text-xs italic leading-relaxed" style={{ color: "#7a5c5c" }}>
+                  "{r.text}"
+                </p>
+                <span
+                  className="text-xs font-semibold px-3 py-1 rounded-full self-start"
+                  style={{ backgroundColor: r.bg, color: r.color, border: `1px solid ${r.border}` }}
+                >
                   {r.badge}
                 </span>
               </div>
@@ -45,46 +58,69 @@ function Home() {
       </div>
 
       {/* Features */}
-      <section className="bg-stone-50 py-20 px-8">
+      <section className="py-24 px-8" style={{ backgroundColor: "#fdfaf6" }}>
         <div className="max-w-7xl mx-auto">
-
-          <div className="mb-12">
-            <p className="text-amber-600 text-xs font-semibold uppercase tracking-widest mb-3">
+          <div className="mb-16">
+            <p
+              className="text-xs font-semibold uppercase tracking-widest mb-4"
+              style={{ color: "#9b2335" }}
+            >
               — What Staylytics does
             </p>
-            <h2 className="text-amber-950 font-bold"
-              style={{ fontFamily: "'Playfair Display', serif", fontSize: "clamp(1.8rem, 3vw, 2.4rem)" }}>
+            <h2
+              className="font-bold"
+              style={{
+                fontFamily: "'Playfair Display', serif",
+                fontSize: "clamp(1.8rem, 3vw, 2.4rem)",
+                color: "#2d1515",
+              }}
+            >
               Six capabilities, one platform.
             </h2>
           </div>
-
-          {/* Two column list */}
           <div className="grid md:grid-cols-2 gap-x-16">
             {features.map((f) => <Card key={f.number} {...f} />)}
           </div>
         </div>
       </section>
 
-      {/* How it works */}
-      <section className="bg-amber-950 py-20 px-6">
-        <div className="max-w-5xl mx-auto">
-          <p className="text-amber-400 text-xs font-semibold uppercase tracking-widest mb-10">
-            How it works
-          </p>
+      {/* Thin divider */}
+      <div className="max-w-7xl mx-auto px-8">
+        <div className="h-px" style={{ backgroundColor: "rgba(155,35,53,0.15)" }} />
+      </div>
 
-          <div className="grid md:grid-cols-3 gap-10">
+      {/* How it works */}
+      <section className="py-24 px-8" style={{ backgroundColor: "#4a1428" }}>
+        <div className="max-w-7xl mx-auto">
+          <p
+            className="text-xs font-semibold uppercase tracking-widest mb-16"
+            style={{ color: "#e8a0a8" }}
+          >
+            — How it works
+          </p>
+          <div className="grid md:grid-cols-3 gap-12">
             {[
               { n: "01", title: "Paste the review", desc: "Copy any guest review from your booking platform and paste it in." },
               { n: "02", title: "AI analyzes it", desc: "Sentiment, themes, and a suggested response are generated in seconds." },
               { n: "03", title: "Act on it", desc: "Edit the response, save it, and track patterns over time." },
             ].map((s) => (
-              <div key={s.n} className="border-t border-amber-800 pt-6">
-                <div className="text-amber-700 font-bold text-3xl mb-4"
-                  style={{ fontFamily: "'Playfair Display', serif" }}>
+              <div
+                key={s.n}
+                className="pt-8"
+                style={{ borderTop: "1px solid rgba(232,160,168,0.25)" }}
+              >
+                <div
+                  className="font-bold text-4xl mb-6"
+                  style={{ fontFamily: "'Playfair Display', serif", color: "#e8a0a8" }}
+                >
                   {s.n}
                 </div>
-                <h3 className="text-white font-semibold text-base mb-2">{s.title}</h3>
-                <p className="text-amber-400/70 text-sm leading-relaxed">{s.desc}</p>
+                <h3 className="font-semibold text-base mb-3" style={{ color: "#fdfaf6" }}>
+                  {s.title}
+                </h3>
+                <p className="text-sm leading-relaxed" style={{ color: "rgba(232,160,168,0.65)" }}>
+                  {s.desc}
+                </p>
               </div>
             ))}
           </div>
@@ -97,11 +133,16 @@ function Home() {
 function Placeholder({ title, description }) {
   return (
     <main className="flex-1 max-w-7xl mx-auto px-8 py-24 text-center">
-      <h1 className="text-3xl font-bold text-amber-900 mb-4"
-        style={{ fontFamily: "'Playfair Display', serif" }}>
+      <h1
+        className="text-3xl font-bold mb-4"
+        style={{ fontFamily: "'Playfair Display', serif", color: "#2d1515" }}
+      >
         {title}
       </h1>
-      <p className="text-stone-500 text-base max-w-md mx-auto leading-relaxed">
+      <p
+        className="text-base max-w-md mx-auto leading-relaxed"
+        style={{ color: "#7a5c5c" }}
+      >
         {description}
       </p>
     </main>
@@ -111,7 +152,7 @@ function Placeholder({ title, description }) {
 export default function App() {
   return (
     <BrowserRouter>
-      <div className="min-h-screen flex flex-col bg-stone-50">
+      <div className="min-h-screen flex flex-col" style={{ backgroundColor: "#fdfaf6" }}>
         <Navbar />
         <Routes>
           <Route path="/" element={<Home />} />
