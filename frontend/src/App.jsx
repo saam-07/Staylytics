@@ -3,6 +3,8 @@ import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import Hero from "./components/Hero";
 import Card from "./components/Card";
+import Login from "./pages/Login";
+
 
 const features = [
   { number: "01", title: "Sentiment Classification", description: "Each review is classified as positive, neutral, or negative — instantly, without manual effort." },
@@ -155,6 +157,7 @@ export default function App() {
       <div className="min-h-screen flex flex-col" style={{ backgroundColor: "#fdfaf6" }}>
         <Navbar />
         <Routes>
+          <Route path="/login" element={<Login />} />
           <Route path="/" element={<Home />} />
           <Route path="/dashboard" element={<Placeholder title="Dashboard" description="Your review analytics and sentiment trends will appear here. Currently in development." />} />
           <Route path="/reviews" element={<Placeholder title="Review Analyzer" description="Paste guest reviews here to get instant AI-powered sentiment analysis, theme tags, and response suggestions." />} />

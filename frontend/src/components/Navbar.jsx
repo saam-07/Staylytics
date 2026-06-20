@@ -3,6 +3,7 @@ import { Link} from "react-router-dom";
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
+<Link to="/login">Login</Link>
 
 
   
@@ -43,12 +44,12 @@ export default function Navbar() {
             </Link>
           ))}
           <Link
-            to="/reviews"
+            to="/login"
             className="text-white text-sm font-semibold px-5 py-2 rounded-lg
-                       hover:opacity-90 hover:-translate-y-0.5 transition-all duration-200"
+                      hover:opacity-90 hover:-translate-y-0.5 transition-all duration-200"
             style={{ backgroundColor: "#9b2335" }}
-          >
-            Analyze Reviews
+            >
+              Login
           </Link>
         </div>
 
@@ -93,14 +94,14 @@ export default function Navbar() {
             </Link>
           ))}
           <Link
-            to="/reviews"
+            to="/login"
             onClick={() => setOpen(false)}
             className="text-white font-semibold px-5 py-2.5 rounded-lg text-center
-                       mt-1 hover:opacity-90 transition-opacity"
+                      mt-1 hover:opacity-90 transition-opacity"
             style={{ backgroundColor: "#9b2335" }}
-          >
-            Analyze Reviews
-          </Link>
+            >
+              Login
+            </Link>
         </div>
       )}
     </nav>
