@@ -12,8 +12,59 @@ html {
 
 body {
   margin: 0;
-  background-color: #fdfaf6;
-  color: #1c0f0f;
+  background-color: var(--bg-page);
+  color: var(--text-dark);
   font-family: 'Inter', sans-serif;
   -webkit-font-smoothing: antialiased;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* ── DARK THEME (default) ── */
+:root,
+[data-theme="dark"] {
+  --bg-hero: #4a1428;
+  --bg-page: #fdfaf6;
+  --bg-card: #5d1a32;
+  --bg-inner: #3d1020;
+  --bg-section: #fdfaf6;
+  --bg-howitworks: #4a1428;
+  --bg-strip: #fdf0f2;
+  --bg-navbar: #ffffff;
+
+  --text-primary: #fdfaf6;
+  --text-secondary: #e8c4c8;
+  --text-accent: #e8a0a8;
+  --text-dark: #2d1515;
+  --text-muted: #7a5c5c;
+  --bg-footer: #4a1428;
+  --border-main: #f0e6e0;
+  --border-strip: #f0d8dc;
+  --border-card: rgba(232,160,168,0.35);
+--bg-howitworks: #4a1428;   /* same as footer — seamless */
+
+  --btn-primary: #9b2335;
+}
+
+/* ── LIGHT THEME ── */
+[data-theme="light"] {
+  --bg-hero: #e8d0d5;        /* light blush wine — hero stands out */
+  --bg-page: #fdfaf6;        /* warm ivory — page base */
+  --bg-card: #ffffff;        /* white card on hero */
+  --bg-inner: #f5e0e4;       /* slightly deeper for inner boxes */
+  --bg-section: #fdfaf6;     /* ivory for features section */
+  --bg-strip: #ffffff;       /* white for review strip */
+  --bg-navbar: #ffffff;
+--bg-howitworks: #e8d0d5;   /* same as footer — seamless */
+
+  --text-primary: #2d1515;
+  --text-secondary: #5a2030;
+  --text-accent: #9b2335;
+  --text-dark: #2d1515;
+  --text-muted: #7a5c5c;
+
+  --border-main: #f0e6e0;
+  --border-strip: #f0d8dc;
+  --border-card: rgba(155,35,53,0.15);
+  --bg-footer: #e8d0d5;
+  --btn-primary: #9b2335;
 }

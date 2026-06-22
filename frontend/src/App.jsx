@@ -92,13 +92,14 @@ function Home() {
       </div>
 
       {/* How it works */}
-      <section className="py-24 px-8" style={{ backgroundColor: "#4a1428" }}>
+      <section className="py-24 px-8 transition-colors duration-300" style={{ backgroundColor: "var(--bg-howitworks)" }}>
+
         <div className="max-w-7xl mx-auto">
           <p
             className="text-xs font-semibold uppercase tracking-widest mb-16"
-            style={{ color: "#e8a0a8" }}
+            style={{ color: "var(--text-accent)" }}
           >
-            — How it works
+            How it works
           </p>
           <div className="grid md:grid-cols-3 gap-12">
             {[
@@ -113,14 +114,14 @@ function Home() {
               >
                 <div
                   className="font-bold text-4xl mb-6"
-                  style={{ fontFamily: "'Playfair Display', serif", color: "#e8a0a8" }}
+                  style={{ fontFamily: "'Playfair Display', serif", color: "var(--text-accent)" }}
                 >
                   {s.n}
                 </div>
-                <h3 className="font-semibold text-base mb-3" style={{ color: "#fdfaf6" }}>
+                <h3 className="font-semibold text-base mb-3" style={{ color: "var(--text-primary)" }}>
                   {s.title}
                 </h3>
-                <p className="text-sm leading-relaxed" style={{ color: "rgba(232,160,168,0.65)" }}>
+                <p className="text-base font-medium leading-relaxed" style={{ color: "var(--text-muted)" }}>
                   {s.desc}
                 </p>
               </div>
