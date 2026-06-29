@@ -4,6 +4,8 @@ import Footer from "./components/Footer";
 import Hero from "./components/Hero";
 import Card from "./components/Card";
 import Login from "./pages/Login";
+import Reviews from "./pages/Reviews";
+
 
 
 const features = [
@@ -161,7 +163,7 @@ export default function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/" element={<Home />} />
           <Route path="/dashboard" element={<Placeholder title="Dashboard" description="Your review analytics and sentiment trends will appear here. Currently in development." />} />
-          <Route path="/reviews" element={<Placeholder title="Review Analyzer" description="Paste guest reviews here to get instant AI-powered sentiment analysis, theme tags, and response suggestions." />} />
+          <Route path="/reviews" element={<Reviews />} />
           <Route path="/about" element={<Placeholder title="About Staylytics" description="Staylytics is an AI-powered review analytics platform built for homestay businesses across Uttarakhand, developed during the TBI GEU Summer Internship 2026." />} />
         </Routes>
         <Footer />
