@@ -8,6 +8,8 @@ import Dashboard from "./pages/Dashboard";
 import Reviews from "./pages/Reviews";
 import About from "./pages/About";
 import Login from "./pages/Login";
+import Register from "./pages/Register";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 export default function App() {
   return (
@@ -20,8 +22,16 @@ export default function App() {
 
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/reviews" element={<Reviews />} />
+          <Route path="/dashboard" element={<ProtectedRoute>
+        <Dashboard />
+        </ProtectedRoute>
+        } />
+          <Route path="/reviews" element={<ProtectedRoute>
+          <Reviews />
+          </ProtectedRoute>
+        } />
+        <Route path="/register" element={<Register />} />
+
           <Route path="/about" element={<About />} />
           <Route path="/login" element={<Login />} />
         </Routes>

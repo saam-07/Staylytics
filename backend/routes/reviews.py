@@ -3,8 +3,15 @@ from typing import List, Optional
 from datetime import datetime
 from models.review import ReviewCreate, ReviewUpdate, ReviewResponse
 from database import supabase
+from auth import verify_token
+from fastapi import Depends
 
 router = APIRouter()
+
+@router.get("/", response_model=List[dict])
+def get_all_reviews(payload: dict = Depends(verify_token)):
+    response = supabase.table("reviews").select("*").order("created_at", desc=True).execute()
+    return response.data
 
 def analyze_sentiment(text: str) -> str:
     text_lower = text.lower()

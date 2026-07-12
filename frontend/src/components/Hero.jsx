@@ -26,7 +26,7 @@ export default function Hero() {
         <div>
           <p className="text-xs font-semibold uppercase tracking-widest mb-6"
             style={{ color: "var(--text-accent)" }}>
-            — Review Analytics for Homestays
+            Review Analytics for Homestays
           </p>
 
           <h1 className="font-bold leading-tight mb-6"

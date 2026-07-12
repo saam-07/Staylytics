@@ -24,7 +24,7 @@ body {
 [data-theme="dark"] {
   --bg-hero: #4a1428;
   --bg-page: #fdfaf6;
-  --bg-card: #5d1a32;
+  --bg-card: #7a2448;
   --bg-inner: #3d1020;
   --bg-section: #fdfaf6;
   --bg-howitworks: #4a1428;
@@ -39,7 +39,7 @@ body {
   --bg-footer: #4a1428;
   --border-main: #f0e6e0;
   --border-strip: #f0d8dc;
-  --border-card: rgba(232,160,168,0.35);
+  --border-card: rgba(232,160,168,0.25);
 --bg-howitworks: #4a1428;   /* same as footer — seamless */
 
   --btn-primary: #9b2335;
@@ -49,7 +49,7 @@ body {
 [data-theme="light"] {
   --bg-hero: #e8d0d5;        /* light blush wine — hero stands out */
   --bg-page: #fdfaf6;        /* warm ivory — page base */
-  --bg-card: #ffffff;        /* white card on hero */
+  --bg-card: #f5e8eb;        /* white card on hero */
   --bg-inner: #f5e0e4;       /* slightly deeper for inner boxes */
   --bg-section: #fdfaf6;     /* ivory for features section */
   --bg-strip: #ffffff;       /* white for review strip */

@@ -9,8 +9,8 @@ export default function Card({ number, title, description }) {
       </span>
 
       <div>
-        <h3 className="font-semibold text-base mb-1.5" style={{ color: "#2d1515" }}>{title}</h3>
-        <p className="text-sm leading-relaxed" style={{ color: "#7a5c5c" }}>{description}</p>
+        <h3 className="font-semibold text-base mb-1.5" style={{ color: "var(--text-dark)" }}>{title}</h3>
+        <p className="text-sm leading-relaxed" style={{ color: "var(--text-muted)" }}>{description}</p>
       </div>
     </div>
   );

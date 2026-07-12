@@ -1,10 +1,19 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useTheme } from "../context/ThemeContext";
+import { useAuth } from "../context/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
   const { isDark, toggle } = useTheme();
+  const { isLoggedIn, logout, user } = useAuth();
+const navigate = useNavigate();
+
+const handleLogout = () => {
+  logout();
+  navigate("/login");
+};
 
   return (
     <nav className="fixed top-0 left-0 w-full z-50 transition-colors duration-300"
@@ -63,13 +72,29 @@ export default function Navbar() {
             )}
           </button>
 
-          <Link to="/login"
-            className="text-white text-sm font-semibold px-5 py-2 rounded-lg
-                       hover:opacity-90 hover:-translate-y-0.5 transition-all duration-200"
-            style={{ backgroundColor: "#9b2335" }}>
-            Login
-          </Link>
-        </div>
+        {isLoggedIn ? (
+  <div className="flex items-center gap-3">
+    <span className="text-sm" style={{ color: "#7a5c5c" }}>
+      {user?.name || "Guest"}
+    </span>
+    <button
+      onClick={handleLogout}
+      className="text-white text-sm font-semibold px-5 py-2 rounded-lg
+                 hover:opacity-90 transition-opacity"
+      style={{ backgroundColor: "#9b2335" }}
+    >
+      Logout
+    </button>
+  </div>
+) : (
+  <Link to="/login"
+    className="text-white text-sm font-semibold px-5 py-2 rounded-lg
+               hover:opacity-90 transition-opacity"
+    style={{ backgroundColor: "#9b2335" }}>
+    Login
+  </Link>
+)}
+ </div>
 
         {/* Hamburger */}
         <div className="md:hidden flex items-center gap-3">

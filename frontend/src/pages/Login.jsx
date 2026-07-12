@@ -5,6 +5,8 @@ import Input from "../components/ui/Input";
 import Modal from "../components/ui/Modal";
 import Toast from "../components/ui/Toast";
 import Loader from "../components/ui/Loader";
+import { useAuth } from "../context/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -14,7 +16,8 @@ export default function Login() {
   const [modalOpen, setModalOpen] = useState(false);
   const [resetEmail, setResetEmail] = useState("");
   const [toast, setToast] = useState({ visible: false, message: "", type: "info" });
-
+  const { login } = useAuth();
+  const navigate = useNavigate();
   const showToast = (message, type = "info") => {
     setToast({ visible: true, message, type });
     setTimeout(() => setToast((t) => ({ ...t, visible: false })), 3000);
@@ -29,20 +32,33 @@ export default function Login() {
     return errs;
   };
 
-  const handleLogin = () => {
-    const errs = validate();
-    if (Object.keys(errs).length > 0) {
-      setErrors(errs);
-      showToast("Please fix the errors below", "error");
-      return;
-    }
-    setErrors({});
-    setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
-      showToast("Logged in successfully!", "success");
-    }, 2000);
-  };
+  const handleLogin = async () => {
+  const errs = validate();
+  if (Object.keys(errs).length > 0) {
+    setErrors(errs);
+    showToast("Please fix the errors below", "error");
+    return;
+  }
+  setErrors({});
+  setLoading(true);
+  try {
+    const res = await fetch("http://127.0.0.1:8000/api/auth/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password }),
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.detail || "Login failed");
+    login(data.token, data.user);
+    showToast("Logged in successfully!", "success");
+    setTimeout(() => navigate("/dashboard"), 800);
+  } catch (err) {
+    showToast(err.message || "Login failed", "error");
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   const handleReset = () => {
     setModalOpen(false);
@@ -154,14 +170,19 @@ export default function Login() {
             label="Continue as Guest"
             variant="ghost"
             size="md"
-            onClick={() => showToast("Entering as guest", "info")}
+            onClick={() => {
+          const guestUser = { id: "guest", email: "guest@staylytics.com", name: "Guest" };
+          login("guest_token", guestUser);
+          showToast("Continuing as guest", "info");
+          setTimeout(() => navigate("/dashboard"), 800);
+            }}
           />
         </div>
 
         {/* Footer */}
         <p className="text-center text-xs mt-6" style={{ color: "#7a5c5c" }}>
           Don't have an account?{" "}
-          <Link to="/signup" className="font-semibold hover:opacity-70 transition-opacity"
+          <Link to="/register" className="font-semibold hover:opacity-70 transition-opacity"
             style={{ color: "#9b2335" }}>
             Sign up
           </Link>
