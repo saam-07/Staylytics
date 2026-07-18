@@ -5,6 +5,7 @@ from models.review import ReviewCreate, ReviewUpdate, ReviewResponse
 from database import supabase
 from auth import verify_token
 from fastapi import Depends
+from gemini import analyze_review_with_ai
 
 router = APIRouter()
 
@@ -93,17 +94,19 @@ def get_single_review(review_id: int):
 
 @router.post("/", response_model=dict, status_code=201)
 def create_review(review: ReviewCreate):
-    sentiment = analyze_sentiment(review.review_text)
-    themes = detect_themes(review.review_text)
-    ai_response = generate_response(sentiment, themes)
+    # Use Gemini AI for analysis
+
+    ai_result = analyze_review_with_ai(review.review_text, review.guest_name)
+
     new_review = {
         "guest_name": review.guest_name,
         "review_text": review.review_text,
-        "sentiment": sentiment,
-        "themes": themes,
-        "ai_response": ai_response,
+        "sentiment": ai_result["sentiment"],
+        "themes": ai_result["themes"],
+        "ai_response": ai_result["ai_response"],
         "rating": review.rating if review.rating else None,
     }
+
     try:
         response = supabase.table("reviews").insert(new_review).execute()
         if not response.data:
@@ -112,7 +115,6 @@ def create_review(review: ReviewCreate):
     except Exception as e:
         print(f"Supabase error: {e}")
         raise HTTPException(status_code=500, detail=str(e))
-
 @router.put("/{review_id}", response_model=dict)
 def update_review(review_id: int, update: ReviewUpdate):
     existing = supabase.table("reviews").select("*").eq("id", review_id).execute()
