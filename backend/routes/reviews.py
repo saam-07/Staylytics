@@ -1,16 +1,26 @@
-from fastapi import APIRouter, HTTPException, Query
+from fastapi import APIRouter, HTTPException, Query, Depends
 from typing import List, Optional
 from datetime import datetime
 from models.review import ReviewCreate, ReviewUpdate, ReviewResponse
 from database import supabase
 from auth import verify_token
-from fastapi import Depends
+from fastapi import Request
 from gemini import analyze_review_with_ai
-
+from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 router = APIRouter()
+security = HTTPBearer(auto_error=False)
+def get_optional_user(credentials: Optional[HTTPAuthorizationCredentials] = Depends(security)):
+    """Returns user payload if token provided, None if not"""
+    if not credentials:
+        return None
+    try:
+        from auth import verify_token_payload
+        return verify_token_payload(credentials.credentials)
+    except:
+        return None
 
 @router.get("/", response_model=List[dict])
-def get_all_reviews(payload: dict = Depends(verify_token)):
+def get_all_reviews(user=Depends(get_optional_user)):
     response = supabase.table("reviews").select("*").order("created_at", desc=True).execute()
     return response.data
 
@@ -63,8 +73,6 @@ def generate_response(sentiment: str, themes: List[str]) -> str:
 
 # ── ENDPOINTS ──
 
-@router.get("/", response_model=List[dict])
-def get_all_reviews():
     response = supabase.table("reviews").select("*").order("created_at", desc=True).execute()
     return response.data
 
@@ -72,7 +80,8 @@ def get_all_reviews():
 def search_reviews(
     sentiment: Optional[str] = Query(None),
     theme: Optional[str] = Query(None),
-    keyword: Optional[str] = Query(None)
+    keyword: Optional[str] = Query(None),
+    user=Depends(get_optional_user)
 ):
     query = supabase.table("reviews").select("*")
     if sentiment:
@@ -86,18 +95,15 @@ def search_reviews(
     return results
 
 @router.get("/{review_id}", response_model=dict)
-def get_single_review(review_id: int):
+def get_single_review(review_id: int, user=Depends(get_optional_user)):
     response = supabase.table("reviews").select("*").eq("id", review_id).execute()
     if not response.data:
         raise HTTPException(status_code=404, detail=f"Review {review_id} not found")
     return response.data[0]
 
 @router.post("/", response_model=dict, status_code=201)
-def create_review(review: ReviewCreate):
-    # Use Gemini AI for analysis
-
+def create_review(review: ReviewCreate, user=Depends(get_optional_user)):
     ai_result = analyze_review_with_ai(review.review_text, review.guest_name)
-
     new_review = {
         "guest_name": review.guest_name,
         "review_text": review.review_text,
@@ -106,15 +112,14 @@ def create_review(review: ReviewCreate):
         "ai_response": ai_result["ai_response"],
         "rating": review.rating if review.rating else None,
     }
-
     try:
         response = supabase.table("reviews").insert(new_review).execute()
         if not response.data:
             raise HTTPException(status_code=500, detail="Failed to create review")
         return response.data[0]
     except Exception as e:
-        print(f"Supabase error: {e}")
         raise HTTPException(status_code=500, detail=str(e))
+
 @router.put("/{review_id}", response_model=dict)
 def update_review(review_id: int, update: ReviewUpdate):
     existing = supabase.table("reviews").select("*").eq("id", review_id).execute()
@@ -125,7 +130,7 @@ def update_review(review_id: int, update: ReviewUpdate):
     return response.data[0]
 
 @router.delete("/{review_id}")
-def delete_review(review_id: int):
+def delete_review(review_id: int, user=Depends(get_optional_user)):
     existing = supabase.table("reviews").select("*").eq("id", review_id).execute()
     if not existing.data:
         raise HTTPException(status_code=404, detail=f"Review {review_id} not found")

@@ -5,16 +5,23 @@ export default function Reviews() {
   const [guestName, setGuestName] = useState("");
   const [reviewText, setReviewText] = useState("");
   const [result, setResult] = useState(null);
+
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
+  const [copiedResponse, setCopiedResponse] = useState(false);
+  const [copiedSentiment, setCopiedSentiment] = useState(false);
+
   const handleAnalyze = async () => {
-    if (!guestName || !reviewText) {
-      setError("Please fill in both fields");
+    if (!guestName.trim() || !reviewText.trim()) {
+      setError("Please fill in both fields.");
       return;
     }
+
     setError("");
+    setResult(null);
     setLoading(true);
+
     try {
       const data = await reviewsApi.create(guestName, reviewText);
       setResult(data);
@@ -25,95 +32,310 @@ export default function Reviews() {
     }
   };
 
+  const copyResponse = async () => {
+    await navigator.clipboard.writeText(result.ai_response);
+    setCopiedResponse(true);
+    setTimeout(() => setCopiedResponse(false), 2000);
+  };
+
+  const copySentiment = async () => {
+    await navigator.clipboard.writeText(result.sentiment);
+    setCopiedSentiment(true);
+    setTimeout(() => setCopiedSentiment(false), 2000);
+  };
+
+  const sentimentStyle = {
+    positive: {
+      bg: "#eef9f1",
+      color: "#2e7d32",
+      border: "#b7e4c7",
+      icon: "🟢",
+    },
+    neutral: {
+      bg: "#fff8e8",
+      color: "#9a6700",
+      border: "#f2d38d",
+      icon: "🟡",
+    },
+    negative: {
+      bg: "#fdf0f2",
+      color: "#9b2335",
+      border: "#f3c4cb",
+      icon: "🔴",
+    },
+  };
+
+  const currentSentiment =
+    sentimentStyle[result?.sentiment] || sentimentStyle.neutral;
+
   return (
     <main className="flex-1 max-w-3xl mx-auto px-8 pt-32 pb-24">
-      <h1 className="text-3xl font-bold mb-2"
-        style={{ fontFamily: "'Playfair Display', serif", color: "var(--text-dark)" }}>
+      <h1
+        className="text-3xl font-bold mb-2"
+        style={{
+          fontFamily: "'Playfair Display', serif",
+          color: "var(--text-dark)",
+        }}
+      >
         Review Analyzer
       </h1>
-      <p className="text-sm mb-8" style={{ color: "var(--text-muted)" }}>
-        Paste a guest review below to get instant AI analysis.
+
+      <p
+        className="text-sm mb-8"
+        style={{ color: "var(--text-muted)" }}
+      >
+        Paste a guest review below and let Staylytics analyze the sentiment,
+        identify key themes, and generate a professional response.
       </p>
 
-      {/* Input form */}
+      {/* INPUT FORM */}
+
       <div className="flex flex-col gap-4 mb-6">
         <input
           type="text"
-          placeholder="Guest name"
+          placeholder="Guest Name"
           value={guestName}
           onChange={(e) => setGuestName(e.target.value)}
           className="w-full px-4 py-3 text-sm rounded-xl outline-none"
-          style={{ border: "1px solid #f0e6e0", color: "#2d1515" }}
+          style={{
+            border: "1px solid #f0e6e0",
+            color: "#2d1515",
+          }}
         />
+
         <textarea
+          rows={5}
           placeholder="Paste guest review here..."
           value={reviewText}
           onChange={(e) => setReviewText(e.target.value)}
-          rows={5}
           className="w-full px-4 py-3 text-sm rounded-xl outline-none resize-none"
-          style={{ border: "1px solid #f0e6e0", color: "#2d1515" }}
+          style={{
+            border: "1px solid #f0e6e0",
+            color: "#2d1515",
+          }}
         />
-        {error && <p className="text-xs" style={{ color: "#9b2335" }}>{error}</p>}
+
+        {error && (
+          <p
+            className="text-sm"
+            style={{ color: "#9b2335" }}
+          >
+            {error}
+          </p>
+        )}
+
         <button
           onClick={handleAnalyze}
           disabled={loading}
-          className="text-white font-semibold px-8 py-3.5 rounded-xl
-                     hover:opacity-90 transition-opacity disabled:opacity-50"
-          style={{ backgroundColor: "#9b2335" }}
+          className="text-white font-semibold px-8 py-3.5 rounded-xl transition-opacity disabled:opacity-60"
+          style={{
+            backgroundColor: "#9b2335",
+          }}
         >
-          {loading ? "Analyzing..." : "Analyze Review →"}
+          {loading ? "Analyzing Review..." : "Analyze Review →"}
         </button>
       </div>
 
-      {/* Result */}
-      {result && (
-        <div className="rounded-2xl p-6"
-          style={{ backgroundColor: "var(--bg-card)", border: "1px solid #f0e6e0" }}>
+      {/* LOADING */}
 
-          {/* Sentiment */}
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="font-semibold" style={{ color: "var(--text-dark)" }}>
-              {result.guest_name}'s Review
-            </h2>
-            <span className="text-xs font-semibold px-3 py-1 rounded-full capitalize"
+      {loading && (
+        <div
+          className="rounded-2xl p-6 mb-6 animate-pulse"
+          style={{
+            border: "1px solid #f0e6e0",
+            backgroundColor: "#fff",
+          }}
+        >
+          <div className="flex items-center gap-4 mb-5">
+            <div
+              className="w-8 h-8 rounded-full border-4 border-t-transparent animate-spin"
               style={{
-                backgroundColor: result.sentiment === "positive" ? "#f0faf0"
-                  : result.sentiment === "negative" ? "#fdf0f2" : "#fdf8f0",
-                color: result.sentiment === "positive" ? "#2d6a2d"
-                  : result.sentiment === "negative" ? "#9b2335" : "#8a6a2a",
-                border: `1px solid ${result.sentiment === "positive" ? "#c3e6c3"
-                  : result.sentiment === "negative" ? "#f0c4c8" : "#f0e0b8"}`,
-              }}>
-              {result.sentiment}
-            </span>
+                borderColor: "#9b2335",
+                borderTopColor: "transparent",
+              }}
+            />
+
+            <div>
+              <h3
+                className="font-semibold"
+                style={{ color: "var(--text-dark)" }}
+              >
+                Staylytics AI is analyzing your review...
+              </h3>
+
+              <p
+                className="text-sm"
+                style={{ color: "var(--text-muted)" }}
+              >
+                Please wait a moment.
+              </p>
+            </div>
           </div>
 
-          {/* Review text */}
-          <p className="text-sm italic leading-relaxed mb-4"
-            style={{ color: "var(--text-muted)" }}>
+          <div
+            className="space-y-2 text-sm"
+            style={{ color: "var(--text-muted)" }}
+          >
+            <p>✓ Reading guest review</p>
+            <p>✓ Detecting sentiment</p>
+            <p>✓ Identifying key themes</p>
+            <p>✓ Generating AI response</p>
+          </div>
+        </div>
+      )}
+
+      {/* RESULT */}
+
+      {!loading && result && (
+        <div
+          className="rounded-2xl p-6"
+          style={{
+            backgroundColor: "var(--bg-card)",
+            border: "1px solid #f0e6e0",
+          }}
+        >
+          <div className="flex items-center justify-between mb-5">
+            <h2
+              className="text-lg font-semibold"
+              style={{ color: "var(--text-dark)" }}
+            >
+              {result.guest_name}'s Review
+            </h2>
+
+            <div className="flex items-center gap-2">
+              <span
+                className="text-xs font-semibold px-3 py-1 rounded-full"
+                style={{
+                  background: currentSentiment.bg,
+                  color: currentSentiment.color,
+                  border: `1px solid ${currentSentiment.border}`,
+                }}
+              >
+                {currentSentiment.icon}{" "}
+                {result.sentiment.charAt(0).toUpperCase() +
+                  result.sentiment.slice(1)}
+              </span>
+
+              <button
+                onClick={copySentiment}
+                className="text-xs px-3 py-1 rounded-lg transition hover:opacity-80"
+                style={{
+                  border: "1px solid #f0c4c8",
+                  color: "#9b2335",
+                }}
+              >
+                {copiedSentiment ? "Copied!" : "Copy"}
+              </button>
+            </div>
+          </div>
+
+          <p
+            className="text-sm italic leading-relaxed mb-4"
+            style={{ color: "var(--text-muted)" }}
+          >
             "{result.review_text}"
           </p>
 
-          {/* Themes */}
-          <div className="flex flex-wrap gap-2 mb-4">
-            {result.themes.map((t) => (
-              <span key={t} className="text-xs px-3 py-1 rounded-full font-medium"
-                style={{ backgroundColor: "#fdf0f2", color: "#9b2335", border: "1px solid #f0c4c8" }}>
-                {t}
+          <div className="flex flex-wrap gap-2 mb-6">
+            {result.themes.map((theme) => (
+              <span
+                key={theme}
+                className="text-xs px-3 py-1 rounded-full font-medium"
+                style={{
+                  backgroundColor: "#fdf0f2",
+                  color: "#9b2335",
+                  border: "1px solid #f0c4c8",
+                }}
+              >
+                {theme}
               </span>
             ))}
           </div>
+                    {/* AI Response */}
 
-          {/* AI Response */}
-          <div className="rounded-xl p-4"
-            style={{ backgroundColor: "var(--bg-inner)", border: "1px solid #f0e6e0" }}>
-            <p className="text-xs font-semibold uppercase tracking-wider mb-2"
-              style={{ color: "#9b2335" }}>
-              AI Suggested Response
-            </p>
-            <p className="text-sm leading-relaxed" style={{ color: "var(--text-muted)" }}>
+          <div
+            className="rounded-xl p-5"
+            style={{
+              background: "var(--bg-inner)",
+              border: "1px solid #f0e6e0",
+            }}
+          >
+            <div className="flex items-center justify-between mb-3">
+              <p
+                className="text-xs font-semibold uppercase tracking-wider"
+                style={{ color: "#9b2335" }}
+              >
+                AI Suggested Response
+              </p>
+
+              <button
+                onClick={copyResponse}
+                className="text-xs px-3 py-1 rounded-lg transition hover:opacity-80"
+                style={{
+                  border: "1px solid #f0c4c8",
+                  color: "#9b2335",
+                }}
+              >
+                {copiedResponse ? "Copied!" : "Copy"}
+              </button>
+            </div>
+
+            <p
+              className="text-sm leading-7"
+              style={{ color: "var(--text-muted)" }}
+            >
               {result.ai_response}
             </p>
+          </div>
+
+          {/* Review Information */}
+
+          <div
+            className="mt-6 grid md:grid-cols-2 gap-4"
+          >
+            <div
+              className="rounded-xl p-4"
+              style={{
+                background: "#fffdfc",
+                border: "1px solid #f0e6e0",
+              }}
+            >
+              <p
+                className="text-xs uppercase font-semibold mb-2"
+                style={{ color: "#9b2335" }}
+              >
+                Guest
+              </p>
+
+              <p
+                className="font-medium"
+                style={{ color: "var(--text-dark)" }}
+              >
+                {result.guest_name}
+              </p>
+            </div>
+
+            <div
+              className="rounded-xl p-4"
+              style={{
+                background: "#fffdfc",
+                border: "1px solid #f0e6e0",
+              }}
+            >
+              <p
+                className="text-xs uppercase font-semibold mb-2"
+                style={{ color: "#9b2335" }}
+              >
+                Analysis Completed
+              </p>
+
+              <p
+                className="font-medium"
+                style={{ color: "var(--text-dark)" }}
+              >
+                Successfully analyzed by Staylytics AI
+              </p>
+            </div>
           </div>
         </div>
       )}

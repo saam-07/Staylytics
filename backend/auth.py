@@ -35,3 +35,11 @@ def verify_token(credentials: HTTPAuthorizationCredentials = Security(security))
         return payload
     except JWTError:
         raise HTTPException(status_code=401, detail="Invalid or expired token")
+    
+    def verify_token_payload(token: str):
+        """Verify token and return payload — raises exception if invalid"""
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        return payload
+    except JWTError:
+        raise HTTPException(status_code=401, detail="Invalid or expired token")
