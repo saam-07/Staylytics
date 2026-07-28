@@ -17,7 +17,18 @@ export const reviewsApi = {
     headers: { ...getAuthHeader() }
   });
   if (!res.ok) throw new Error("Failed to fetch reviews");
-  return res.json();
+  const data = await res.json();
+
+return data.map((review) => ({
+  id: review.id,
+  guestName: review.guest_name,
+  review: review.review_text,
+  sentiment: review.sentiment,
+  themes: review.themes,
+  aiResponse: review.ai_response,
+  rating: review.rating,
+  createdAt: review.created_at,
+}));
 },
 
   // GET single review
