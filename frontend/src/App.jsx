@@ -2,7 +2,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
-
+import ReviewArchive from "./pages/ReviewArchive";
 import Home from "./pages/Home";
 import Dashboard from "./pages/Dashboard";
 import Reviews from "./pages/Reviews";
@@ -31,7 +31,7 @@ export default function App() {
           </ProtectedRoute>
         } />
         <Route path="/register" element={<Register />} />
-
+        <Route path="/review-archive" element={<ReviewArchive/>} />
           <Route path="/about" element={<About />} />
           <Route path="/login" element={<Login />} />
         </Routes>
