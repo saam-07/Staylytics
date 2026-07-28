@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { reviewsApi } from "../services/reviewsApi";
 
 export default function Reviews() {
   const [guestName, setGuestName] = useState("");
   const [reviewText, setReviewText] = useState("");
+
   const [result, setResult] = useState(null);
 
   const [loading, setLoading] = useState(false);
@@ -11,6 +12,25 @@ export default function Reviews() {
 
   const [copiedResponse, setCopiedResponse] = useState(false);
   const [copiedSentiment, setCopiedSentiment] = useState(false);
+
+  // New states
+  const [ setReviews] = useState([]);
+  const [editingResponse, setEditingResponse] = useState(false);
+  const [editedResponse, setEditedResponse] = useState("");
+
+  // Load existing reviews
+ const fetchReviews = async () => {
+  try {
+    const data = await reviewsApi.getAll();
+    setReviews(Array.isArray(data) ? data.reverse() : []);
+  } catch (err) {
+    console.error("Unable to fetch reviews", err);
+  }
+};
+
+useEffect(() => {
+  fetchReviews();
+}, []);
 
   const handleAnalyze = async () => {
     if (!guestName.trim() || !reviewText.trim()) {
@@ -23,23 +43,66 @@ export default function Reviews() {
     setLoading(true);
 
     try {
-      const data = await reviewsApi.create(guestName, reviewText);
+      const data = await reviewsApi.create(
+        guestName,
+        reviewText
+      );
+
       setResult(data);
+      setEditedResponse(data.ai_response);
+
+      // refresh history page data
+      await fetchReviews();
     } catch (err) {
-      setError("Failed to connect to backend. Make sure it's running.");
-    } finally {
+  console.error(err);
+  setError("Failed to connect to backend. Make sure it's running.");
+} finally {
       setLoading(false);
     }
   };
+    const handleSaveEditedResponse = async () => {
+    if (!result) return;
+
+    try {
+      const updatedReview = await reviewsApi.update(result.id, {
+        ai_response: editedResponse,
+      });
+
+      setResult(updatedReview);
+      setEditingResponse(false);
+
+      await fetchReviews();
+    } catch (err) {
+      console.error("Failed to update AI response", err);
+      setError("Unable to save the edited response.");
+    }
+  };
+
+  const handleAnalyzeAnother = () => {
+    setGuestName("");
+    setReviewText("");
+    setResult(null);
+    setEditedResponse("");
+    setEditingResponse(false);
+    setError("");
+  };
 
   const copyResponse = async () => {
-    await navigator.clipboard.writeText(result.ai_response);
+    if (!result) return;
+
+    await navigator.clipboard.writeText(
+      editingResponse ? editedResponse : result.ai_response
+    );
+
     setCopiedResponse(true);
     setTimeout(() => setCopiedResponse(false), 2000);
   };
 
   const copySentiment = async () => {
+    if (!result) return;
+
     await navigator.clipboard.writeText(result.sentiment);
+
     setCopiedSentiment(true);
     setTimeout(() => setCopiedSentiment(false), 2000);
   };
@@ -67,8 +130,7 @@ export default function Reviews() {
 
   const currentSentiment =
     sentimentStyle[result?.sentiment] || sentimentStyle.neutral;
-
-  return (
+      return (
     <main className="flex-1 max-w-3xl mx-auto px-8 pt-32 pb-24">
       <h1
         className="text-3xl font-bold mb-2"
@@ -124,16 +186,32 @@ export default function Reviews() {
           </p>
         )}
 
-        <button
-          onClick={handleAnalyze}
-          disabled={loading}
-          className="text-white font-semibold px-8 py-3.5 rounded-xl transition-opacity disabled:opacity-60"
-          style={{
-            backgroundColor: "#9b2335",
-          }}
-        >
-          {loading ? "Analyzing Review..." : "Analyze Review →"}
-        </button>
+        <div className="flex flex-wrap gap-3">
+          <button
+            onClick={handleAnalyze}
+            disabled={loading}
+            className="text-white font-semibold px-8 py-3.5 rounded-xl transition-opacity disabled:opacity-60"
+            style={{
+              backgroundColor: "#9b2335",
+            }}
+          >
+            {loading ? "Analyzing Review..." : "Analyze Review →"}
+          </button>
+
+          {result && (
+            <button
+              onClick={handleAnalyzeAnother}
+              className="px-6 py-3 rounded-xl transition"
+              style={{
+                border: "1px solid #f0c4c8",
+                color: "#9b2335",
+                background: "#fff",
+              }}
+            >
+              Analyze Another
+            </button>
+          )}
+        </div>
       </div>
 
       {/* LOADING */}
@@ -176,17 +254,17 @@ export default function Reviews() {
             className="space-y-2 text-sm"
             style={{ color: "var(--text-muted)" }}
           >
-            <p>✓ Reading guest review</p>
-            <p>✓ Detecting sentiment</p>
-            <p>✓ Identifying key themes</p>
-            <p>✓ Generating AI response</p>
+            <p>Reading guest review</p>
+            <p>Detecting sentiment</p>
+            <p>Identifying key themes</p>
+            <p>Generating AI response</p>
           </div>
         </div>
       )}
 
+      
       {/* RESULT */}
-
-      {!loading && result && (
+            {!loading && result && (
         <div
           className="rounded-2xl p-6"
           style={{
@@ -251,7 +329,8 @@ export default function Reviews() {
               </span>
             ))}
           </div>
-                    {/* AI Response */}
+
+          {/* AI Response */}
 
           <div
             className="rounded-xl p-5"
@@ -268,31 +347,86 @@ export default function Reviews() {
                 AI Suggested Response
               </p>
 
-              <button
-                onClick={copyResponse}
-                className="text-xs px-3 py-1 rounded-lg transition hover:opacity-80"
-                style={{
-                  border: "1px solid #f0c4c8",
-                  color: "#9b2335",
-                }}
-              >
-                {copiedResponse ? "Copied!" : "Copy"}
-              </button>
-            </div>
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => {
+                    setEditingResponse(true);
+                    setEditedResponse(result.ai_response);
+                  }}
+                  className="text-xs px-3 py-1 rounded-lg transition hover:opacity-80"
+                  style={{
+                    border: "1px solid #f0c4c8",
+                    color: "#9b2335",
+                  }}
+                >
+                  Edit Response
+                </button>
 
-            <p
-              className="text-sm leading-7"
-              style={{ color: "var(--text-muted)" }}
-            >
-              {result.ai_response}
-            </p>
+                <button
+                  onClick={copyResponse}
+                  className="text-xs px-3 py-1 rounded-lg transition hover:opacity-80"
+                  style={{
+                    border: "1px solid #f0c4c8",
+                    color: "#9b2335",
+                  }}
+                >
+                  {copiedResponse ? "Copied!" : "Copy"}
+                </button>
+              </div>
+            </div>
+                        {editingResponse ? (
+              <>
+                <textarea
+                  rows={6}
+                  value={editedResponse}
+                  onChange={(e) => setEditedResponse(e.target.value)}
+                  className="w-full px-4 py-3 text-sm rounded-xl resize-none outline-none"
+                  style={{
+                    border: "1px solid #f0e6e0",
+                    color: "var(--text-dark)",
+                    background: "#fff",
+                  }}
+                />
+
+                <div className="flex gap-3 mt-4">
+                  <button
+                    onClick={handleSaveEditedResponse}
+                    className="text-white px-5 py-2 rounded-lg text-sm font-medium"
+                    style={{
+                      background: "#9b2335",
+                    }}
+                  >
+                    Save
+                  </button>
+
+                  <button
+                    onClick={() => {
+                      setEditingResponse(false);
+                      setEditedResponse(result.ai_response);
+                    }}
+                    className="px-5 py-2 rounded-lg text-sm"
+                    style={{
+                      border: "1px solid #f0c4c8",
+                      color: "#9b2335",
+                    }}
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </>
+            ) : (
+              <p
+                className="text-sm leading-7"
+                style={{ color: "var(--text-muted)" }}
+              >
+                {result.ai_response}
+              </p>
+            )}
           </div>
 
           {/* Review Information */}
 
-          <div
-            className="mt-6 grid md:grid-cols-2 gap-4"
-          >
+          <div className="mt-6 grid md:grid-cols-2 gap-4">
             <div
               className="rounded-xl p-4"
               style={{
@@ -336,6 +470,19 @@ export default function Reviews() {
                 Successfully analyzed by Staylytics AI
               </p>
             </div>
+          </div>
+
+          <div className="mt-6 flex justify-end">
+            <button
+              onClick={handleAnalyzeAnother}
+              className="px-6 py-3 rounded-xl transition"
+              style={{
+                background: "#9b2335",
+                color: "#fff",
+              }}
+            >
+              Analyze Another Review
+            </button>
           </div>
         </div>
       )}
