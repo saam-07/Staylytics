@@ -21,6 +21,7 @@ export default function Footer() {
             <Link to="/" className="hover:opacity-70 transition-opacity">Home</Link>
             <Link to="/dashboard" className="hover:opacity-70 transition-opacity">Dashboard</Link>
             <Link to="/reviews" className="hover:opacity-70 transition-opacity">Reviews</Link>
+            <Link to ="/review-archive" className="hover:opacity-70 transition-opacity">Reviews Archive</Link>
             <Link to="/about" className="hover:opacity-70 transition-opacity">About</Link>
           </div>
         </div>

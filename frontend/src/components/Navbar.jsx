@@ -32,14 +32,25 @@ const handleLogout = () => {
 
         {/* Desktop links */}
         <div className="hidden md:flex items-center gap-8 text-sm font-medium">
-          {["Home", "Dashboard", "Reviews", "About"].map((item) => (
-            <Link key={item}
-              to={item === "Home" ? "/" : `/${item.toLowerCase()}`}
-              className="hover:opacity-70 transition-opacity"
-              style={{ color: "#7a5c5c" }}>
-              {item}
-            </Link>
-          ))}
+  {[
+    { name: "Home", path: "/" },
+    { name: "Dashboard", path: "/dashboard" },
+    { name: "Reviews", path: "/reviews" },
+    { name: "Review Archive", path: "/review-archive" },
+    { name: "About", path: "/about" },
+  ].map((item) => (
+    <Link
+      key={item.name}
+      to={item.path}
+      className="hover:opacity-70 transition-opacity"
+      style={{ color: "#7a5c5c" }}
+    >
+      {item.name}
+    </Link>
+  ))}
+
+  {/* Dark/Light toggle */}
+  
 
           {/* Dark/Light toggle */}
           <button
@@ -122,14 +133,22 @@ const handleLogout = () => {
       {open && (
         <div className="md:hidden px-6 py-4 flex flex-col gap-3 text-sm font-medium bg-white"
           style={{ borderTop: "1px solid #f0e6e0", color: "#7a5c5c" }}>
-          {["Home", "Dashboard", "Reviews", "About"].map((item) => (
-            <Link key={item}
-              to={item === "Home" ? "/" : `/${item.toLowerCase()}`}
-              onClick={() => setOpen(false)}
-              style={{ color: "#7a5c5c" }}>
-              {item}
-            </Link>
-          ))}
+          {[
+  { name: "Home", path: "/" },
+  { name: "Dashboard", path: "/dashboard" },
+  { name: "Reviews", path: "/reviews" },
+  { name: "Review Archive", path: "/review-archive" },
+  { name: "About", path: "/about" },
+].map((item) => (
+  <Link
+    key={item.name}
+    to={item.path}
+    className="hover:opacity-70 transition-opacity"
+    style={{ color: "#7a5c5c" }}
+  >
+    {item.name}
+  </Link>
+))}
           <Link to="/login" onClick={() => setOpen(false)}
             className="text-white font-semibold px-5 py-2.5 rounded-lg text-center
                        mt-1 hover:opacity-90 transition-opacity"
