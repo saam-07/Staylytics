@@ -1,6 +1,3 @@
-// src/services/reviewsApi.js
-// Connect React frontend to FastAPI backend
-
 const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
 
 const getAuthHeader = () => {
@@ -32,11 +29,17 @@ return data.map((review) => ({
 },
 
   // GET single review
-  getById: async (id) => {
-    const res = await fetch(`${BASE_URL}/reviews/${id}`);
-    if (!res.ok) throw new Error(`Review ${id} not found`);
-    return res.json();
-  },
+  // GET single review
+getById: async (id) => {
+  const res = await fetch(`${BASE_URL}/reviews/${id}`, {
+    headers: {
+      ...getAuthHeader(),
+    },
+  });
+
+  if (!res.ok) throw new Error(`Review ${id} not found`);
+  return res.json();
+},
 
   // POST create + analyze review
   create: async (guestName, reviewText, rating = null) => {
@@ -57,15 +60,20 @@ return data.map((review) => ({
 },
 
   // PUT update review
-  update: async (id, data) => {
-    const res = await fetch(`${BASE_URL}/reviews/${id}`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(data),
-    });
-    if (!res.ok) throw new Error("Failed to update review");
-    return res.json();
-  },
+  // PUT update review
+update: async (id, data) => {
+  const res = await fetch(`${BASE_URL}/reviews/${id}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      ...getAuthHeader(),
+    },
+    body: JSON.stringify(data),
+  });
+
+  if (!res.ok) throw new Error("Failed to update review");
+  return res.json();
+},
 
   // DELETE review
 delete: async (id) => {

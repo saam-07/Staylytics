@@ -1,25 +1,36 @@
-import google.generativeai as genai
-import os
 import json
+import os
 from dotenv import load_dotenv
+import google.generativeai as genai
 
 load_dotenv()
 
 genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
 
-model = genai.GenerativeModel("gemini-1.5-flash")
+model = genai.GenerativeModel(
+    model_name="gemini-3.6-flash",
+    generation_config={
+        "response_mime_type": "application/json",
+        "temperature": 0.1,
+    },
+)
 
 
 def analyze_review_with_ai(review_text: str, guest_name: str) -> dict:
     """
-    Uses Gemini AI to analyze a guest review.
-    Returns sentiment, themes and AI response.
+    Analyze a hospitality review using Gemini AI.
+    Returns:
+    {
+        sentiment,
+        themes,
+        ai_response
+    }
     """
 
     prompt = f"""
-You are Staylytics AI, an intelligent hospitality review assistant for a homestay business in Uttarakhand, India.
+You are Staylytics AI, an expert hospitality review analyst.
 
-Your task is to carefully analyze guest reviews.
+Analyze the following hospitality review.
 
 Guest Name:
 {guest_name}
@@ -27,170 +38,283 @@ Guest Name:
 Guest Review:
 "{review_text}"
 
-=========================
-INSTRUCTIONS
-=========================
+==================================================
+TASK 1 - SENTIMENT CLASSIFICATION
+==================================================
 
-1. Determine the overall sentiment.
+Determine the OVERALL sentiment.
 
-Allowed values ONLY:
-- positive
-- neutral
-- negative
+Possible values:
+
+positive
+neutral
+negative
 
 Rules:
-- Mostly positive feedback -> positive
-- Mostly complaints -> negative
-- Mixture of praise and complaints -> neutral
 
-------------------------------------
+POSITIVE
+- The guest is clearly satisfied.
+- Positive comments outweigh any small complaints.
+- Reviews containing words such as:
+great, amazing, excellent, wonderful, fantastic,
+loved, beautiful, perfect, delicious, enjoyable,
+friendly, comfortable, clean, recommend,
+awesome, pleasant, memorable
 
-2. Identify ALL relevant themes.
-
-Choose ONLY from the following list:
-
-- Food
-- Host
-- Cleanliness
-- Location
-- WiFi
-- Service
-- Experience
+should normally be classified as POSITIVE.
 
 Examples:
 
-Review:
-"The host was very warm but the WiFi kept dropping."
+"Spent a great weekend here, loved the vibe."
+→ Positive
 
-Themes:
-["Host","WiFi"]
+"Amazing breakfast and beautiful location."
+→ Positive
 
-----------------
+"Fantastic stay. WiFi was a little slow."
+→ Positive
 
-Review:
-"Breakfast was delicious and the mountain view was breathtaking."
+"Host was extremely friendly and food was delicious."
+→ Positive
 
-Themes:
-["Food","Location"]
+Minor complaints SHOULD NOT change an otherwise positive review to neutral.
 
-----------------
 
-Review:
-"The room wasn't clean and service was slow."
+NEUTRAL
 
-Themes:
-["Cleanliness","Service"]
+Use Neutral ONLY when:
 
-----------------
+- Positive and negative opinions are balanced.
+- The review is mostly factual.
+- The overall opinion is unclear.
 
-Review:
-"We enjoyed the stay."
+Examples:
 
-Themes:
+"The host was warm but the WiFi kept disconnecting."
+
+"The room was clean but breakfast was average."
+
+"The location is near the market."
+
+
+NEGATIVE
+
+Use Negative when:
+
+- Complaints outweigh compliments.
+- Guest is dissatisfied.
+
+Examples:
+
+"The room was dirty and the staff were rude."
+
+"Terrible food and slow service."
+
+"Very disappointing stay."
+
+Always determine the OVERALL opinion.
+
+Never classify a clearly happy review as Neutral.
+
+==================================================
+TASK 2 - THEME EXTRACTION
+==================================================
+
+Extract ALL matching themes ONLY from this list.
+
+Food
+Host
+Cleanliness
+Location
+WiFi
+Service
+Experience
+
+Rules:
+
+Breakfast -> Food
+
+Dinner -> Food
+
+Meal -> Food
+
+Cuisine -> Food
+
+Staff -> Service
+
+Reception -> Service
+
+Owner -> Host
+
+Friendly Host -> Host
+
+Mountain View -> Location
+
+Scenic -> Location
+
+Internet -> WiFi
+
+Network -> WiFi
+
+Stay -> Experience
+
+Weekend -> Experience
+
+Vibe -> Experience
+
+Do NOT create any new themes.
+
+If none match,
+return:
+
 ["Experience"]
 
-IMPORTANT:
-Return every matching theme.
-Do NOT invent new themes.
+==================================================
+TASK 3 - OWNER RESPONSE
+==================================================
 
-------------------------------------
+Generate a professional owner response.
 
-3. Write a professional response.
+Requirements:
 
-The response should:
+- Address the guest by name.
+- Thank them.
+- Mention specific positives.
+- If there is criticism,
+acknowledge it politely.
+- Keep between 2 and 3 sentences.
+- Warm and welcoming tone.
 
-- Thank the guest.
-- Mention positive feedback if present.
-- Apologize for any negative experience if present.
-- Sound warm and natural.
-- Be 2–3 sentences.
-
-=========================
-OUTPUT FORMAT
-=========================
+==================================================
+TASK 4 - OUTPUT
+==================================================
 
 Return ONLY valid JSON.
 
-Example:
+Format:
 
 {{
-  "sentiment": "neutral",
-  "themes": ["Host","WiFi"],
-  "ai_response": "Thank you for sharing your feedback. We are delighted that you appreciated our hospitality. We apologize for the WiFi issues and are working to improve the experience for all our guests. We hope to welcome you again soon."
+    "sentiment":"positive",
+    "themes":["Experience"],
+    "ai_response":"..."
 }}
 
-Return ONLY JSON.
+No markdown.
 
-Do not use markdown.
+No explanations.
 
-Do not use code blocks.
+No extra text.
 
-Do not explain anything.
+==================================================
+FEW SHOT EXAMPLES
+==================================================
+
+Review:
+Spent a great weekend here, loved the vibe.
+
+Output:
+{{
+"sentiment":"positive",
+"themes":["Experience"],
+"ai_response":"Thank you, {guest_name}, for your wonderful review! We're delighted you had a great weekend and enjoyed the overall experience. We look forward to welcoming you again soon."
+}}
+
+Review:
+Amazing breakfast and beautiful mountain view.
+
+Output:
+{{
+"sentiment":"positive",
+"themes":["Food","Location"],
+"ai_response":"Thank you, {guest_name}, for your wonderful feedback! We're thrilled you enjoyed our breakfast and the beautiful surroundings. We hope to welcome you back again soon."
+}}
+
+Review:
+The host was very warm but the WiFi kept dropping.
+
+Output:
+{{
+"sentiment":"neutral",
+"themes":["Host","WiFi"],
+"ai_response":"Thank you, {guest_name}, for sharing your feedback. We're delighted you appreciated our hospitality and apologize for the WiFi issues. We hope to provide an even better stay next time."
+}}
+
+Review:
+The room was dirty and the staff were rude.
+
+Output:
+{{
+"sentiment":"negative",
+"themes":["Cleanliness","Service"],
+"ai_response":"Thank you, {guest_name}, for your feedback. We're sorry your experience did not meet expectations. Your comments have been shared with our team so we can improve."
+}}
+
+Review:
+Breakfast was excellent although parking was limited.
+
+Output:
+{{
+"sentiment":"positive",
+"themes":["Food"],
+"ai_response":"Thank you, {guest_name}, for your kind review! We're delighted you enjoyed the breakfast and appreciate your additional feedback. We hope to welcome you again soon."
+}}
 """
 
+    allowed_themes = {
+        "Food",
+        "Host",
+        "Cleanliness",
+        "Location",
+        "WiFi",
+        "Service",
+        "Experience",
+    }
+
     try:
-        response = model.generate_content(prompt)
+        response = model.generate_content(
+            prompt,
+            generation_config=genai.GenerationConfig(
+                temperature=0.1,
+                response_mime_type="application/json",
+            ),
+        )
 
-        text = response.text.strip()
+        print("Gemini Response:")
+        print(response.text)
 
-        # Remove markdown if Gemini returns it
-        if text.startswith("```"):
-            text = text.replace("```json", "")
-            text = text.replace("```", "")
-            text = text.strip()
+        data = json.loads(response.text)
 
-        print("\n===== GEMINI OUTPUT =====")
-        print(text)
-        print("=========================\n")
-
-        result = json.loads(text)
-
-        # Validation
-
-        sentiment = result.get("sentiment", "neutral").lower()
+        sentiment = str(data.get("sentiment", "neutral")).strip().lower()
 
         if sentiment not in ["positive", "neutral", "negative"]:
             sentiment = "neutral"
 
-        themes = result.get("themes", [])
+        raw_themes = data.get("themes", [])
 
-        if not isinstance(themes, list):
-            themes = ["Experience"]
+        if not isinstance(raw_themes, list):
+            raw_themes = []
 
-        allowed_themes = [
-            "Food",
-            "Host",
-            "Cleanliness",
-            "Location",
-            "WiFi",
-            "Service",
-            "Experience",
+        validated_themes = [
+            theme
+            for theme in raw_themes
+            if theme in allowed_themes
         ]
 
-        themes = [theme for theme in themes if theme in allowed_themes]
+        if not validated_themes:
+            validated_themes = ["Experience"]
 
-        if not themes:
-            themes = ["Experience"]
-
-        ai_response = result.get(
-            "ai_response",
-            "Thank you for sharing your experience with us. We value your feedback and hope to welcome you back soon!"
-        )
+        ai_response = str(
+            data.get(
+                "ai_response",
+                f"Thank you for sharing your experience with us, {guest_name}. We truly appreciate your feedback."
+            )
+        ).strip()
 
         return {
             "sentiment": sentiment,
-            "themes": themes,
+            "themes": validated_themes,
             "ai_response": ai_response,
         }
 
     except Exception as e:
-        print(f"Gemini error: {e}")
-
-        return {
-            "sentiment": "neutral",
-            "themes": ["Experience"],
-            "ai_response": (
-                "Thank you for sharing your experience with us. "
-                "We value your feedback and hope to welcome you back soon!"
-            ),
-        }
+        print(f"Gemini Error: {e}")

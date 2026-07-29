@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState, useCallback } from "react";
 import { Search, Download } from "lucide-react";
-import {reviewsApi} from "../services/reviewsApi";
+import { reviewsApi } from "../services/reviewsApi";
+import { useNavigate } from "react-router-dom";
 
 const ReviewArchive = () => {
   const [reviews, setReviews] = useState([]);
@@ -17,12 +18,26 @@ const ReviewArchive = () => {
   const [editingReview, setEditingReview] = useState(null);
   const [deleteReviewId, setDeleteReviewId] = useState(null);
 
-  // 1. Stable Fetching Function
+  const navigate = useNavigate();
+
+  // 1. Fetch & Normalize Data
   const fetchReviews = useCallback(async () => {
     try {
       setLoading(true);
-      const data = await reviewsApi.getAll();
-      setReviews(data || []);
+      const rawData = await reviewsApi.getAll();
+      
+      // Normalize snake_case API responses into camelCase for React
+      const normalizedData = (rawData || []).map((r) => ({
+        id: r.id,
+        guestName: r.guest_name || r.guestName || "Anonymous",
+        review: r.review_text || r.review || "",
+        sentiment: (r.sentiment || "neutral").toLowerCase(), // Normalize to lowercase
+        themes: r.themes || [],
+        aiResponse: r.ai_response || r.aiResponse || "",
+        createdAt: r.created_at || r.createdAt || new Date().toISOString(),
+      }));
+
+      setReviews(normalizedData);
     } catch (err) {
       console.error("Failed to fetch reviews:", err);
     } finally {
@@ -31,34 +46,43 @@ const ReviewArchive = () => {
   }, []);
 
   useEffect(() => {
-    const loadReviews = async () => {
-        await fetchReviews();
-    };
+    const token = localStorage.getItem("staylytics_token");
 
-    loadReviews();
-}, [fetchReviews]);
+    if (!token) {
+      navigate("/login");
+      return;
+    }
 
-  // 2. Computed Filtered & Sorted Reviews (Derive state using useMemo)
+    fetchReviews();
+  }, [navigate, fetchReviews]);
+
+  // 2. Computed Filtered & Sorted Reviews
   const filteredReviews = useMemo(() => {
     let data = [...reviews];
 
+    // Search filter
     if (searchTerm.trim()) {
       const term = searchTerm.toLowerCase();
       data = data.filter(
         (r) =>
-          (r.guestName || "").toLowerCase().includes(term) ||
-          (r.review || "").toLowerCase().includes(term)
+          r.guestName.toLowerCase().includes(term) ||
+          r.review.toLowerCase().includes(term)
       );
     }
 
+    // Sentiment filter (Case-insensitive comparison)
     if (sentimentFilter !== "All") {
-      data = data.filter((r) => r.sentiment === sentimentFilter);
+      data = data.filter(
+        (r) => r.sentiment.toLowerCase() === sentimentFilter.toLowerCase()
+      );
     }
 
+    // Theme filter
     if (themeFilter !== "All") {
       data = data.filter((r) => (r.themes || []).includes(themeFilter));
     }
 
+    // Sorting
     data.sort((a, b) => {
       const d1 = new Date(a.createdAt);
       const d2 = new Date(b.createdAt);
@@ -91,7 +115,15 @@ const ReviewArchive = () => {
   const handleSaveEdit = async () => {
     if (!editingReview) return;
     try {
-      await reviewsApi.update(editingReview.id, editingReview);
+      // Send back updated snake_case keys if backend expects them
+      const payload = {
+        guest_name: editingReview.guestName,
+        review_text: editingReview.review,
+        ai_response: editingReview.aiResponse,
+      };
+
+      await reviewsApi.update(editingReview.id, payload);
+
       setReviews((prev) =>
         prev.map((r) => (r.id === editingReview.id ? editingReview : r))
       );
@@ -130,68 +162,65 @@ const ReviewArchive = () => {
 
   return (
     <div
-  className="min-h-screen p-8"
-  style={{ backgroundColor: "var(--bg-page)" }}
->
+      className="min-h-screen p-8"
+      style={{ backgroundColor: "var(--bg-page)" }}
+    >
       <div className="max-w-7xl mx-auto">
-       <h1
-  className="text-3xl font-bold"
-  style={{ color: "var(--text-primary)" }}
-   >Review Archive</h1>
-        <p
-  className="mt-2"
-  style={{ color: "var(--text-muted)" }}
->
+        <h1
+          className="text-3xl font-bold"
+          style={{ color: "var(--text-primary)" }}
+        >
+          Review Archive
+        </h1>
+        <p className="mt-2" style={{ color: "var(--text-muted)" }}>
           Browse, search and manage previously analyzed guest reviews.
         </p>
 
         {/* Filter Toolbar */}
         <div
-            className="mt-8 rounded-xl shadow p-5 flex flex-wrap gap-4 items-center"
-            style={{
-              backgroundColor: "var(--bg-card)",
-              border: "1px solid var(--border-card)",
-            }}
-          >
+          className="mt-8 rounded-xl shadow p-5 flex flex-wrap gap-4 items-center"
+          style={{
+            backgroundColor: "var(--bg-card)",
+            border: "1px solid var(--border-card)",
+          }}
+        >
           <div className="relative flex-1 min-w-[260px]">
             <Search
-            className="absolute left-3 top-3"
-            style={{ color: "var(--text-muted)" }}
-            size={18}
+              className="absolute left-3 top-3"
+              style={{ color: "var(--text-muted)" }}
+              size={18}
             />
             <input
               type="text"
               placeholder="Search reviews..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full rounded-lg pl-10 py-2 focus:outline-none"
-          style={{
-          backgroundColor: "var(--bg-page)",
-        color: "var(--text-primary)",
-        border: "1px solid var(--border-main)"
-        }}
+              className="w-full rounded-lg pl-10 py-2 focus:outline-none"
+              style={{
+                backgroundColor: "var(--bg-page)",
+                color: "var(--text-primary)",
+                border: "1px solid var(--border-main)",
+              }}
             />
           </div>
 
           <select
-  value={sentimentFilter}
-  onChange={(e) => setSentimentFilter(e.target.value)}
-  className="rounded-lg px-3 py-2"
-  style={{
-    backgroundColor: "var(--bg-page)",
-    color: "var(--text-primary)",
-    border: "1px solid var(--border-main)"
-  }}
->
-          
-            <option>All</option>
-            <option>Positive</option>
-            <option>Neutral</option>
-            <option>Negative</option>
+            value={sentimentFilter}
+            onChange={(e) => setSentimentFilter(e.target.value)}
+            className="rounded-lg px-3 py-2 capitalize"
+            style={{
+              backgroundColor: "var(--bg-page)",
+              color: "var(--text-primary)",
+              border: "1px solid var(--border-main)",
+            }}
+          >
+            <option value="All">All Sentiments</option>
+            <option value="positive">Positive</option>
+            <option value="neutral">Neutral</option>
+            <option value="negative">Negative</option>
           </select>
 
-          
-             <select
+          <select
             value={themeFilter}
             onChange={(e) => setThemeFilter(e.target.value)}
             className="rounded-lg px-3 py-2"
@@ -200,9 +229,11 @@ const ReviewArchive = () => {
               color: "var(--text-primary)",
               border: "1px solid var(--border-main)",
             }}
-          >         
+          >
             {availableThemes.map((theme) => (
-              <option key={theme}>{theme}</option>
+              <option key={theme} value={theme}>
+                {theme}
+              </option>
             ))}
           </select>
 
@@ -210,14 +241,14 @@ const ReviewArchive = () => {
             value={sortOption}
             onChange={(e) => setSortOption(e.target.value)}
             className="rounded-lg px-3 py-2"
-          style={{
-            backgroundColor: "var(--bg-page)",
-            color: "var(--text-primary)",
-            border: "1px solid var(--border-main)"
-          }}
+            style={{
+              backgroundColor: "var(--bg-page)",
+              color: "var(--text-primary)",
+              border: "1px solid var(--border-main)",
+            }}
           >
-            <option>Newest</option>
-            <option>Oldest</option>
+            <option value="Newest">Newest</option>
+            <option value="Oldest">Oldest</option>
           </select>
 
           <button
@@ -251,29 +282,33 @@ const ReviewArchive = () => {
               <div
                 key={review.id}
                 className="rounded-xl shadow hover:shadow-lg transition p-5 flex flex-col justify-between"
-            style={{
-              backgroundColor: "var(--bg-card)",
-              border: "1px solid var(--border-card)"
-            }}
+                style={{
+                  backgroundColor: "var(--bg-card)",
+                  border: "1px solid var(--border-card)",
+                }}
               >
                 <div>
                   <div className="flex justify-between items-start gap-2">
                     <div>
-                      <h3 className="font-semibold text-lg"
-                      style={{ color: "var(--text-primary)" }}>
+                      <h3
+                        className="font-semibold text-lg"
+                        style={{ color: "var(--text-primary)" }}
+                      >
                         {review.guestName}
                       </h3>
-                      <p className="text-sm"
-                      style={{ color: "var(--text-muted)" }}>
+                      <p
+                        className="text-sm"
+                        style={{ color: "var(--text-muted)" }}
+                      >
                         {new Date(review.createdAt).toLocaleDateString()}
                       </p>
                     </div>
 
                     <span
-                      className={`px-3 py-1 rounded-full text-xs font-semibold shrink-0 ${
-                        review.sentiment === "Positive"
+                      className={`px-3 py-1 rounded-full text-xs font-semibold capitalize shrink-0 ${
+                        review.sentiment === "positive"
                           ? "bg-green-100 text-green-700"
-                          : review.sentiment === "Negative"
+                          : review.sentiment === "negative"
                           ? "bg-red-100 text-red-700"
                           : "bg-yellow-100 text-yellow-700"
                       }`}
@@ -282,8 +317,10 @@ const ReviewArchive = () => {
                     </span>
                   </div>
 
-                  <p className="mt-4 line-clamp-3"
-                style={{ color: "var(--text-secondary)" }}>
+                  <p
+                    className="mt-4 line-clamp-3"
+                    style={{ color: "var(--text-secondary)" }}
+                  >
                     {review.review}
                   </p>
 
@@ -326,7 +363,7 @@ const ReviewArchive = () => {
           </div>
         )}
       </div>
-      
+
       {/* View Details Modal */}
       {selectedReview && (
         <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-50 p-4">
@@ -345,7 +382,7 @@ const ReviewArchive = () => {
                 <p className="mt-1 text-gray-700">{selectedReview.review}</p>
               </div>
 
-              <p>
+              <p className="capitalize">
                 <strong>Sentiment:</strong> {selectedReview.sentiment}
               </p>
 
@@ -454,10 +491,8 @@ const ReviewArchive = () => {
           </div>
         </div>
       )}
-      </div>
-);
+    </div>
+  );
 };
-
-
 
 export default ReviewArchive;
