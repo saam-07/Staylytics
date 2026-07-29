@@ -31,11 +31,11 @@ body {
   --bg-strip: #fdf0f2;
   --bg-navbar: #ffffff;
 
-  --text-primary: #fdfaf6;
-  --text-secondary: #e8c4c8;
-  --text-accent: #e8a0a8;
+  --text-primary: #fff9f7;
+--text-secondary: #f0d8dc;
+--text-muted: #d6aeb6;
+--text-accent: #f0a9b5;
   --text-dark: #2d1515;
-  --text-muted: #7a5c5c;
   --bg-footer: #4a1428;
   --border-main: #f0e6e0;
   --border-strip: #f0d8dc;

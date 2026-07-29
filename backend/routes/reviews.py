@@ -120,6 +120,41 @@ def create_review(review: ReviewCreate, user=Depends(get_optional_user)):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
+import time
+
+time.sleep(12)
+@router.post("/reanalyze-all")
+def reanalyze_all_reviews(user=Depends(get_optional_user)):
+    try:
+        # Fetch all reviews
+        response = supabase.table("reviews").select("*").execute()
+        reviews = response.data
+
+        updated = 0
+
+        for review in reviews:
+            # Run Gemini again using the updated prompt
+            ai_result = analyze_review_with_ai(
+                review["review_text"],
+                review["guest_name"]
+            )
+
+            # Update only AI-generated fields
+            supabase.table("reviews").update({
+                "sentiment": ai_result["sentiment"],
+                "themes": ai_result["themes"],
+                "ai_response": ai_result["ai_response"]
+            }).eq("id", review["id"]).execute()
+
+            updated += 1
+
+        return {
+            "message": f"Successfully reanalyzed {updated} reviews."
+        }
+
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+    
 @router.put("/{review_id}", response_model=dict)
 def update_review(review_id: int, update: ReviewUpdate):
     existing = supabase.table("reviews").select("*").eq("id", review_id).execute()

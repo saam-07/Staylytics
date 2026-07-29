@@ -14,7 +14,7 @@ export default function Reviews() {
   const [copiedSentiment, setCopiedSentiment] = useState(false);
 
   // New states
-  const [ setReviews] = useState([]);
+  const [, setReviews] = useState([]);
   const [editingResponse, setEditingResponse] = useState(false);
   const [editedResponse, setEditedResponse] = useState("");
 
