@@ -9,24 +9,18 @@ const getAuthHeader = () => {
 export const reviewsApi = {
 
   // GET all reviews
-  getAll: async () => {
+// GET all reviews — remove the mapping, return raw data
+getAll: async () => {
+  const headers = getAuthHeader();
+  if (!headers || Object.keys(headers).length === 0) return []; // guest sees empty
   const res = await fetch(`${BASE_URL}/reviews`, {
-    headers: { ...getAuthHeader() }
+    headers: { ...headers }
   });
   if (!res.ok) throw new Error("Failed to fetch reviews");
-  const data = await res.json();
-
-return data.map((review) => ({
-  id: review.id,
-  guestName: review.guest_name,
-  review: review.review_text,
-  sentiment: review.sentiment,
-  themes: review.themes,
-  aiResponse: review.ai_response,
-  rating: review.rating,
-  createdAt: review.created_at,
-}));
+  return res.json(); // return raw — same as other functions
 },
+
+
 
   // GET single review
   // GET single review
@@ -42,12 +36,16 @@ getById: async (id) => {
 },
 
   // POST create + analyze review
-  create: async (guestName, reviewText, rating = null) => {
+ create: async (guestName, reviewText, rating = null) => {
+  const headers = getAuthHeader();
+  if (!headers || Object.keys(headers).length === 0) {
+    throw new Error("Please log in to analyze and save reviews.");
+  }
   const res = await fetch(`${BASE_URL}/reviews`, {
     method: "POST",
-    headers: { 
+    headers: {
       "Content-Type": "application/json",
-      ...getAuthHeader()
+      ...headers
     },
     body: JSON.stringify({
       guest_name: guestName,
