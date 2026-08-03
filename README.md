@@ -1,6 +1,6 @@
 # Staylytics
 
-AI-powered guest review analytics platform for homestay businesses across Uttarakhand.
+AI-powered guest review analytics platform for homestay businesses.
 
 ---
 
@@ -9,6 +9,16 @@ AI-powered guest review analytics platform for homestay businesses across Uttara
 Staylytics helps homestay owners analyze guest feedback instantly — classify sentiment, detect themes, and generate professional responses — without reading every review manually.
 
 ---
+## Live Deployment
+
+### Frontend
+https://staylytics-seven.vercel.app/
+
+### Backend
+https://staylytics-a6i0.onrender.com/
+
+API Documentation:
+https://staylytics-a6i0.onrender.com/docs
 
 ## Tech Stack
 
@@ -16,9 +26,10 @@ Staylytics helps homestay owners analyze guest feedback instantly — classify s
 |-------|-----------|
 | Frontend | React, Vite, Tailwind CSS |
 | Backend | Python, FastAPI |
-| Database | PostgreSQL (Supabase) |
-| AI | Gemini API (coming) |
-| Deployment | Vercel (frontend), Render (backend) |
+| Database | Supabase (PostgreSQL) |
+| AI | Google Gemini API |
+| Authentication | JWT Authentication, Google OAuth |
+| Deployment | Vercel, Render |
 
 ---
 
@@ -62,15 +73,19 @@ Staylytics/
 
 ## API Endpoints
 
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | `/reviews` | Get all reviews |
-| GET | `/reviews/{id}` | Get single review |
-| POST | `/reviews` | Create and analyze a review |
-| PUT | `/reviews/{id}` | Update a review |
-| DELETE | `/reviews/{id}` | Delete a review |
-| GET | `/reviews/search` | Search and filter reviews |
-| GET | `/health` | Health check |
+| Method | Endpoint |
+|---------|----------|
+| POST | /api/auth/register |
+| POST | /api/auth/login |
+| POST | /api/auth/google |
+| GET | /api/auth/me |
+| POST | /api/auth/logout |
+| GET | /reviews |
+| POST | /reviews |
+| PUT | /reviews/{id} |
+| DELETE | /reviews/{id} |
+| GET | /reviews/search |
+| GET | /health |
 
 ---
 
@@ -85,20 +100,24 @@ We chose Supabase because:
 - Free tier sufficient for development
 - Easy to scale
 
+
 ### Schema
 
 ```sql
 CREATE TABLE public.reviews (
-  id SERIAL PRIMARY KEY,
-  guest_name VARCHAR(255) NOT NULL,
-  review_text TEXT NOT NULL,
-  sentiment VARCHAR(50) NOT NULL,
-  themes TEXT[] NOT NULL DEFAULT '{}',
-  ai_response TEXT NOT NULL,
-  rating INTEGER CHECK (rating >= 1 AND rating <= 5),
-  created_at TIMESTAMP DEFAULT NOW()
+    id SERIAL PRIMARY KEY,
+    guest_name TEXT NOT NULL,
+    review_text TEXT NOT NULL,
+    sentiment TEXT,
+    themes TEXT[],
+    ai_response TEXT,
+    rating INTEGER,
+    user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
+    created_at TIMESTAMP DEFAULT NOW()
 );
 ```
+Each review belongs to the authenticated user using the user_id foreign key
+
 ### Schema Diagram
 
 ![Staylytics Reviews Table Schema](./W5_SchemaDiagram_[TBI-26101328].png)
@@ -160,19 +179,87 @@ Copy `.env.example` to `.env` and fill in your values:
 ```
 SUPABASE_URL=https://your-project-id.supabase.co
 SUPABASE_KEY=your_supabase_anon_key
+
+JWT_SECRET=your_jwt_secret
+
+GEMINI_API_KEY=your_gemini_api_key
+
+GOOGLE_CLIENT_ID=your_google_client_id
+
 FRONTEND_URL=http://localhost:5173
-GEMINI_API_KEY=your_gemini_api_key_here
 ```
 
 ---
 
 ## Features
 
-- AI sentiment classification — positive, neutral, negative
-- Theme detection — Food, Host, Cleanliness, Location, WiFi, Experience
-- AI-generated response drafts for each review
-- Review history with search and filter
-- Dark / Light mode toggle
-- Fully responsive — mobile, tablet, desktop
-- Login page with form validation
-- UI component library — Button, Input, Modal, Toast, Loader
+- Secure user authentication using JWT
+- Google OAuth Login
+- AI-powered guest review analysis using Google Gemini
+- Automatic sentiment detection
+- Theme extraction from reviews
+- AI-generated professional response suggestions
+- User-specific review dashboard
+- Full CRUD functionality
+- Search reviews by keyword, sentiment, and themes
+- Responsive UI
+- Dark and Light mode
+- Protected routes
+- RESTful FastAPI backend
+- Email/password authentication
+- JWT-based authorization
+- Google OAuth Sign-In
+
+## Deployment
+
+### Frontend
+
+Hosted on Vercel.
+
+Environment Variables
+
+VITE_API_URL=https://staylytics-a6i0.onrender.com
+
+VITE_GOOGLE_CLIENT_ID=<Google OAuth Client ID>
+
+### Backend
+
+Hosted on Render.
+
+Environment Variables
+
+SUPABASE_URL
+
+SUPABASE_KEY
+
+JWT_SECRET
+
+GEMINI_API_KEY
+
+GOOGLE_CLIENT_ID
+
+FRONTEND_URL=https://staylytics-seven.vercel.app
+
+## Known Limitations
+
+- Render free tier spins down after inactivity.
+- First request after inactivity may take 30–60 seconds.
+- Gemini API usage depends on available free quota.
+
+## Future Improvements
+
+- Analytics dashboard with charts
+- Export reports to PDF
+- Email notifications
+- Multi-property management
+- AI trend analysis
+
+## License
+
+Developed as part of the TBI GEU AI Assisted Full Stack Internship Program.
+
+## Author
+
+**Saamya Narayan**
+
+Developed as part of the TBI GEU AI Assisted Full Stack Internship Program.
