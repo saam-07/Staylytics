@@ -22,33 +22,44 @@ export default function Login() {
     setToast({ visible: true, message, type });
     setTimeout(() => setToast((t) => ({ ...t, visible: false })), 3000);
   };
+  
   useEffect(() => {
   // Define callback
   window.handleGoogleCallback = async (response) => {
-    try {
-      const res = await fetch("http://127.0.0.1:8000/api/auth/google", {
+  try {
+    const res = await fetch(
+      `${import.meta.env.VITE_API_URL}/api/auth/google`,
+      {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ credential: response.credential }),
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.detail);
-      login(data.token, data.user);
-      showToast("Signed in with Google!", "success");
-      setTimeout(() => navigate("/dashboard"), 800);
-    } catch (err) {
-      showToast(err.message || "Google sign in failed", "error");
-    }
-  };
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          credential: response.credential,
+        }),
+      }
+    );
+
+    const data = await res.json();
+
+    if (!res.ok) throw new Error(data.detail);
+
+    login(data.token, data.user);
+    showToast("Signed in with Google!", "success");
+    setTimeout(() => navigate("/dashboard"), 800);
+  } catch (err) {
+    showToast(err.message || "Google sign in failed", "error");
+  }
+};
 
   // Initialize Google Identity Services
   const initGoogle = () => {
     if (window.google) {
       window.google.accounts.id.initialize({
-        client_id: "580034075318-sp27koska9ar8vdo4af5m83r8e2ch5mn.apps.googleusercontent.com",
-        callback: window.handleGoogleCallback,
+      client_id: import.meta.env.VITE_GOOGLE_CLIENT_ID,        
+      callback: window.handleGoogleCallback,
       });
-        window._googleInitialized = true;
+        
       window.google.accounts.id.renderButton(
         document.getElementById("google-signin-btn"),
         {
@@ -59,6 +70,7 @@ export default function Login() {
           shape: "rectangular",
         }
       );
+      window._googleInitialized = true;
     } else {
       // Script not loaded yet, retry after 500ms
       setTimeout(initGoogle, 500);
@@ -66,7 +78,7 @@ export default function Login() {
   };
 
   initGoogle();
-}, [login, navigate, showToast]);
+}, [login, navigate]);
 
   const validate = () => {
     const errs = {};
@@ -79,22 +91,37 @@ export default function Login() {
 
   const handleLogin = async () => {
   const errs = validate();
+
   if (Object.keys(errs).length > 0) {
     setErrors(errs);
     showToast("Please fix the errors below", "error");
     return;
   }
+
   setErrors({});
   setLoading(true);
+
   try {
-    const res = await fetch("http://127.0.0.1:8000/api/auth/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, password }),
-    });
+    const res = await fetch(
+      `${import.meta.env.VITE_API_URL}/api/auth/login`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email,
+          password,
+        }),
+      }
+    );
+
     const data = await res.json();
+
     if (!res.ok) throw new Error(data.detail || "Login failed");
+
     login(data.token, data.user);
+
     showToast("Logged in successfully!", "success");
     setTimeout(() => navigate("/dashboard"), 800);
   } catch (err) {
@@ -103,8 +130,7 @@ export default function Login() {
     setLoading(false);
   }
 };
-
-
+   
   const handleReset = () => {
     setModalOpen(false);
     showToast("Password reset link sent to your email", "success");
