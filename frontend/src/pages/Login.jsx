@@ -65,7 +65,7 @@ export default function Login() {
         {
           theme: "outline",
           size: "large",
-          width: 400,
+          width: Math.min(window.innerWidth - 80, 360),
           text: "sign_in_with",
           shape: "rectangular",
         }
