@@ -33,10 +33,11 @@ https://staylytics-a6i0.onrender.com/docs
 
 ---
 
-## Project Structure
+## 📁 Project Structure
 
-```
+```text
 Staylytics/
+│
 ├── frontend/
 │   ├── src/
 │   │   ├── components/
@@ -51,23 +52,40 @@ Staylytics/
 │   │   │       ├── Toast.jsx
 │   │   │       ├── Loader.jsx
 │   │   │       └── index.js
+│   │   │
 │   │   ├── pages/
 │   │   │   ├── Login.jsx
 │   │   │   └── Reviews.jsx
+│   │   │
 │   │   ├── context/
+│   │   │   ├── AuthContext.jsx
 │   │   │   └── ThemeContext.jsx
+│   │   │
 │   │   └── services/
 │   │       └── reviewsApi.js
-└── backend/
-    ├── main.py
-    ├── database.py
-    ├── requirements.txt
-    ├── .env.example
-    ├── models/
-    │   └── review.py
-    └── routes/
-        └── reviews.py
-```
+│   │
+│   └── package.json
+│
+├── backend/
+│   ├── main.py
+│   ├── database.py
+│   ├── requirements.txt
+│   ├── .env.example
+│   │
+│   ├── models/
+│   │   └── review.py
+│   │
+│   └── routes/
+│       ├── reviews.py
+│       └── auth.py
+│
+├── screenshots/
+│   ├── home.png
+│   ├── login.png
+│   ├── dashboard.png
+│   └── ai-analysis.png
+│
+└── README.md
 
 ---
 
@@ -210,6 +228,27 @@ FRONTEND_URL=http://localhost:5173
 - JWT-based authorization
 - Google OAuth Sign-In
 
+---
+
+## 🖥️ Screenshots
+
+### Home Page
+
+![Staylytics Home Page](./screenshots/home.png)
+
+### Login & Authentication
+
+![Staylytics Login](./screenshots/login.png)
+
+### Review Dashboard
+
+![Staylytics Review Dashboard](./screenshots/dashboard.png)
+
+### AI Review Analysis
+
+![Staylytics AI Review Analysis](./screenshots/ai-analysis.png)
+
+---
 ## Deployment
 
 ### Frontend
