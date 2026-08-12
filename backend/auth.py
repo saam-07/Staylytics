@@ -5,7 +5,10 @@ from fastapi import HTTPException, Security
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 import os
 
-SECRET_KEY = os.getenv("JWT_SECRET", "changethis")
+SECRET_KEY = os.getenv("JWT_SECRET")
+
+if not SECRET_KEY:
+    raise RuntimeError("JWT_SECRET environment variable is not set")
 ALGORITHM = "HS256"
 EXPIRE_DAYS = int(os.getenv("JWT_EXPIRE_DAYS", 7))
 
