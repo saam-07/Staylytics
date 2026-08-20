@@ -21,27 +21,27 @@ body {
 
 :root,
 [data-theme="dark"] {
-  --bg-page: #15050b;        /* Deep wine-black */
-  --bg-navbar: #1f0811;      /* Deep wine navbar */
-  --bg-hero: #2d0b17;        /* Dark wine hero */
-  --bg-card: #3d1020;        /* Medium dark wine card */
-  --bg-inner: #240713;       /* Deeper wine box */
-  --bg-section: #15050b;     /* Section background matching page */
-  --bg-howitworks: #1f0811;  /* Seamless dark section */
-  --bg-strip: #250815;       /* Warm dark rose strip */
-  --bg-footer: #15050b;      /* Footer background */
+  --bg-page: #250914;        /* Rich warm burgundy */
+  --bg-navbar: #2e0c1a;      /* Soft deep wine for navbar */
+  --bg-hero: #3a1122;        /* Elegant wine hero background */
+  --bg-card: #4e192f;        /* Medium wine card background */
+  --bg-inner: #2e0c1a;       /* Secondary deep box background */
+  --bg-section: #250914;     /* Section background matching page */
+  --bg-howitworks: #2e0c1a;  /* Deep wine section background */
+  --bg-strip: #330f1c;       /* Warm burgundy strip */
+  --bg-footer: #1e050f;      /* Darkest wine footer */
 
   --text-primary: #fff9f7;
-  --text-secondary: #f0d8dc;
-  --text-muted: #bc9ea4;
-  --text-accent: #f0a9b5;
-  --text-dark: #fff9f7;      /* Readable white text in dark mode */
+  --text-secondary: #f3dfdf;  /* Lighter text for enhanced readability */
+  --text-muted: #caa6af;      /* Warmer muted rose */
+  --text-accent: #f5b0bb;     /* Rich warm accent pink */
+  --text-dark: #fff9f7; 
 
-  --border-main: #3d1424;
-  --border-strip: #4a182d;
-  --border-card: rgba(240, 169, 181, 0.15);
+  --border-main: #421626;     /* Wine border */
+  --border-strip: #4d1c2d;
+  --border-card: rgba(245, 176, 187, 0.18);
 
-  --btn-primary: #b52c41;    /* Slightly more vibrant brand red for dark mode contrast */
+  --btn-primary: #c23146;    /* Vibrant red-pink for button contrast */
 }
 
 /* ── LIGHT THEME ── */
