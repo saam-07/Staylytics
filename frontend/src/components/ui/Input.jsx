@@ -24,7 +24,7 @@ export default function Input({
       {label && (
         <label
           className="text-sm font-semibold"
-          style={{ color: "#2d1515" }}
+          style={{ color: "var(--text-primary)" }}
         >
           {label}
         </label>
@@ -40,28 +40,28 @@ export default function Input({
                    transition-all duration-200
                    disabled:opacity-50 disabled:cursor-not-allowed"
         style={{
-          border: error ? "1px solid #9b2335" : "1px solid #f0e6e0",
-          backgroundColor: disabled ? "#fdf5f0" : "#ffffff",
-          color: "#2d1515",
+          border: error ? "1px solid var(--btn-primary)" : "1px solid var(--border-main)",
+          backgroundColor: disabled ? "var(--bg-page)" : "var(--bg-inner)",
+          color: "var(--text-primary)",
           boxShadow: "none",
         }}
         onFocus={(e) => {
-          e.target.style.border = `1px solid ${error ? "#9b2335" : "#c4736a"}`;
-          e.target.style.boxShadow = `0 0 0 3px ${error ? "rgba(155,35,53,0.1)" : "rgba(196,115,106,0.1)"}`;
+          e.target.style.border = `1px solid ${error ? "var(--btn-primary)" : "var(--text-accent)"}`;
+          e.target.style.boxShadow = `0 0 0 3px ${error ? "rgba(155,35,53,0.15)" : "var(--border-card)"}`;
         }}
         onBlur={(e) => {
-          e.target.style.border = `1px solid ${error ? "#9b2335" : "#f0e6e0"}`;
+          e.target.style.border = `1px solid ${error ? "var(--btn-primary)" : "var(--border-main)"}`;
           e.target.style.boxShadow = "none";
         }}
       />
 
       {error && (
-        <p className="text-xs font-medium" style={{ color: "#9b2335" }}>
+        <p className="text-xs font-medium" style={{ color: "var(--btn-primary)" }}>
           {error}
         </p>
       )}
       {hint && !error && (
-        <p className="text-xs" style={{ color: "#7a5c5c" }}>
+        <p className="text-xs" style={{ color: "var(--text-muted)" }}>
           {hint}
         </p>
       )}

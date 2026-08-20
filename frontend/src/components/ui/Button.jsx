@@ -25,19 +25,19 @@ export default function Button({
 
   const variants = {
     primary: {
-      backgroundColor: "#9b2335",
+      backgroundColor: "var(--btn-primary)",
       color: "#ffffff",
-      border: "1px solid #9b2335",
+      border: "1px solid var(--btn-primary)",
     },
     secondary: {
       backgroundColor: "transparent",
-      color: "#9b2335",
-      border: "1px solid #9b2335",
+      color: "var(--btn-primary)",
+      border: "1px solid var(--btn-primary)",
     },
     ghost: {
       backgroundColor: "transparent",
-      color: "#7a5c5c",
-      border: "1px solid #f0e6e0",
+      color: "var(--text-muted)",
+      border: "1px solid var(--border-main)",
     },
   };
 

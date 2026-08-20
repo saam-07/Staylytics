@@ -28,19 +28,19 @@ export default function Modal({
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center px-4"
-      style={{ backgroundColor: "rgba(45,21,21,0.5)", backdropFilter: "blur(4px)" }}
+      style={{ backgroundColor: "rgba(18, 4, 10, 0.6)", backdropFilter: "blur(4px)" }}
       onClick={onClose}
     >
       <div
         className={`${sizes[size]} w-full rounded-2xl p-6 shadow-xl`}
-        style={{ backgroundColor: "#ffffff", border: "1px solid #f0e6e0" }}
+        style={{ backgroundColor: "var(--bg-card)", border: "1px solid var(--border-card)" }}
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
         <div className="flex justify-between items-center mb-5">
           <h2
             className="font-bold text-lg"
-            style={{ fontFamily: "'Playfair Display', serif", color: "#2d1515" }}
+            style={{ fontFamily: "'Playfair Display', serif", color: "var(--text-primary)" }}
           >
             {title}
           </h2>
@@ -48,14 +48,14 @@ export default function Modal({
             onClick={onClose}
             className="w-8 h-8 rounded-lg flex items-center justify-center
                        hover:opacity-70 transition-opacity text-lg"
-            style={{ color: "#7a5c5c", backgroundColor: "#fdf5f0" }}
+            style={{ color: "var(--text-muted)", backgroundColor: "var(--bg-inner)" }}
           >
             ×
           </button>
         </div>
 
         {/* Body */}
-        <div className="mb-6 text-sm leading-relaxed" style={{ color: "#7a5c5c" }}>
+        <div className="mb-6 text-sm leading-relaxed" style={{ color: "var(--text-secondary)" }}>
           {children}
         </div>
 
@@ -65,7 +65,7 @@ export default function Modal({
             onClick={onClose}
             className="px-5 py-2 text-sm font-semibold rounded-xl
                        hover:opacity-70 transition-opacity"
-            style={{ color: "#7a5c5c", border: "1px solid #f0e6e0" }}
+            style={{ color: "var(--text-muted)", border: "1px solid var(--border-main)" }}
           >
             Cancel
           </button>
@@ -74,7 +74,7 @@ export default function Modal({
               onClick={onConfirm}
               className="px-5 py-2 text-sm font-semibold rounded-xl text-white
                          hover:-translate-y-0.5 hover:shadow-md transition-all duration-200"
-              style={{ backgroundColor: "#9b2335" }}
+              style={{ backgroundColor: "var(--btn-primary)" }}
             >
               {confirmLabel}
             </button>

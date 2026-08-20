@@ -47,17 +47,17 @@ export default function Home() {
 
       {/* Sample Reviews */}
       <section
-        className="px-8 py-8"
+        className="px-8 py-8 transition-colors duration-300"
         style={{
-          backgroundColor: "#fdf0f2",
-          borderTop: "1px solid #f0d8dc",
-          borderBottom: "1px solid #f0d8dc",
+          backgroundColor: "var(--bg-strip)",
+          borderTop: "1px solid var(--border-strip)",
+          borderBottom: "1px solid var(--border-strip)",
         }}
       >
         <div className="max-w-7xl mx-auto">
           <p
             className="text-xs uppercase tracking-widest font-semibold mb-5"
-            style={{ color: "#c4736a" }}
+            style={{ color: "var(--text-accent)" }}
           >
             Sample analyzed reviews
           </p>
@@ -97,13 +97,13 @@ export default function Home() {
                 key={index}
                 className="rounded-xl px-4 py-4 flex flex-col gap-3"
                 style={{
-                  backgroundColor: "#fff",
-                  border: "1px solid #f0d8dc",
+                  backgroundColor: "var(--bg-card)",
+                  border: "1px solid var(--border-card)",
                 }}
               >
                 <p
                   className="text-xs italic leading-relaxed"
-                  style={{ color: "#7a5c5c" }}
+                  style={{ color: "var(--text-secondary)" }}
                 >
                   "{review.text}"
                 </p>
@@ -127,8 +127,8 @@ export default function Home() {
       {/* Features */}
 
       <section
-        className="py-24 px-8"
-        style={{ backgroundColor: "#fdfaf6" }}
+        className="py-24 px-8 transition-colors duration-300"
+        style={{ backgroundColor: "var(--bg-section)" }}
       >
         <div className="max-w-7xl mx-auto">
 
@@ -136,7 +136,7 @@ export default function Home() {
 
             <p
               className="text-xs font-semibold uppercase tracking-widest mb-4"
-              style={{ color: "#9b2335" }}
+              style={{ color: "var(--text-accent)" }}
             >
               — What Staylytics Does
             </p>
@@ -146,7 +146,7 @@ export default function Home() {
               style={{
                 fontFamily: "'Playfair Display', serif",
                 fontSize: "clamp(1.8rem,3vw,2.4rem)",
-                color: "#2d1515",
+                color: "var(--text-primary)",
               }}
             >
               Six capabilities, one platform.
@@ -172,7 +172,7 @@ export default function Home() {
         <div
           className="h-px"
           style={{
-            backgroundColor: "rgba(155,35,53,0.15)",
+            backgroundColor: "var(--border-main)",
           }}
         />
       </div>

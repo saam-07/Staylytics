@@ -18,15 +18,15 @@ const handleLogout = () => {
   return (
     <nav className="fixed top-0 left-0 w-full z-50 transition-colors duration-300"
       style={{
-        backgroundColor: "#ffffff",
-        borderBottom: "1px solid #f0e6e0",
+        backgroundColor: "var(--bg-navbar)",
+        borderBottom: "1px solid var(--border-main)",
         boxShadow: "0 2px 8px rgba(0,0,0,0.06)",
       }}>
       <div className="max-w-7xl mx-auto px-8 py-4 flex justify-between items-center">
 
         {/* Logo */}
         <Link to="/" className="text-xl font-bold transition-colors duration-300"
-          style={{ fontFamily: "'Playfair Display', serif", color: "#2d1515" }}>
+          style={{ fontFamily: "'Playfair Display', serif", color: "var(--text-primary)" }}>
           Staylytics
         </Link>
 
@@ -43,7 +43,7 @@ const handleLogout = () => {
       key={item.name}
       to={item.path}
       className="hover:opacity-70 transition-opacity"
-      style={{ color: "#7a5c5c" }}
+      style={{ color: "var(--text-secondary)" }}
     >
       {item.name}
     </Link>
@@ -57,7 +57,7 @@ const handleLogout = () => {
             onClick={toggle}
             className="w-10 h-10 rounded-xl flex items-center justify-center
                        hover:opacity-80 transition-all duration-200"
-            style={{ backgroundColor: "#fdf0f2", border: "1px solid #f0e6e0" }}
+            style={{ backgroundColor: "var(--bg-inner)", border: "1px solid var(--border-main)" }}
             title={isDark ? "Switch to light mode" : "Switch to dark mode"}
           >
             {isDark ? (
@@ -85,7 +85,7 @@ const handleLogout = () => {
 
         {isLoggedIn ? (
   <div className="flex items-center gap-3">
-    <span className="text-sm" style={{ color: "#7a5c5c" }}>
+    <span className="text-sm" style={{ color: "var(--text-muted)" }}>
       {user?.name || "Guest"}
     </span>
     <button
@@ -111,7 +111,7 @@ const handleLogout = () => {
         <div className="md:hidden flex items-center gap-3">
           <button onClick={toggle}
             className="w-8 h-8 rounded-lg flex items-center justify-center"
-            style={{ backgroundColor: "#fdf0f2", border: "1px solid #f0e6e0" }}>
+            style={{ backgroundColor: "var(--bg-inner)", border: "1px solid var(--border-main)" }}>
             {isDark ? "☀️" : "🌙"}
           </button>
           <button onClick={() => setOpen(!open)}
@@ -123,7 +123,7 @@ const handleLogout = () => {
             ].map((cls, i) => (
               <span key={i}
                 className={`block w-5 h-0.5 transition-all duration-300 ${cls}`}
-                style={{ backgroundColor: "#2d1515" }} />
+                style={{ backgroundColor: "var(--text-primary)" }} />
             ))}
           </button>
         </div>
@@ -131,8 +131,8 @@ const handleLogout = () => {
 
       {/* Mobile menu */}
       {open && (
-        <div className="md:hidden px-6 py-4 flex flex-col gap-3 text-sm font-medium bg-white"
-          style={{ borderTop: "1px solid #f0e6e0", color: "#7a5c5c" }}>
+        <div className="md:hidden px-6 py-4 flex flex-col gap-3 text-sm font-medium transition-colors duration-300"
+          style={{ backgroundColor: "var(--bg-navbar)", borderTop: "1px solid var(--border-main)", color: "var(--text-secondary)" }}>
           {[
   { name: "Home", path: "/" },
   { name: "Dashboard", path: "/dashboard" },
@@ -144,7 +144,7 @@ const handleLogout = () => {
     key={item.name}
     to={item.path}
     className="hover:opacity-70 transition-opacity"
-    style={{ color: "#7a5c5c" }}
+    style={{ color: "var(--text-secondary)" }}
   >
     {item.name}
   </Link>

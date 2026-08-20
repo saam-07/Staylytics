@@ -15,10 +15,10 @@ export default function Loader({ size = "md", label, fullPage = false }) {
     <div className="flex flex-col items-center gap-3">
       <div
         className={`${sizes[size]} rounded-full animate-spin`}
-        style={{ borderColor: "#f0e6e0", borderTopColor: "#9b2335" }}
+        style={{ borderColor: "var(--border-main)", borderTopColor: "var(--btn-primary)" }}
       />
       {label && (
-        <p className="text-sm font-medium" style={{ color: "#7a5c5c" }}>
+        <p className="text-sm font-medium" style={{ color: "var(--text-muted)" }}>
           {label}
         </p>
       )}
@@ -28,7 +28,7 @@ export default function Loader({ size = "md", label, fullPage = false }) {
   if (fullPage) {
     return (
       <div className="fixed inset-0 z-50 flex items-center justify-center"
-        style={{ backgroundColor: "rgba(253,250,246,0.8)", backdropFilter: "blur(4px)" }}>
+        style={{ backgroundColor: "color-mix(in srgb, var(--bg-page) 80%, transparent)", backdropFilter: "blur(4px)" }}>
         {spinner}
       </div>
     );

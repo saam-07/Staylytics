@@ -15,8 +15,8 @@ export default function App() {
   return (
     <BrowserRouter>
       <div
-        className="min-h-screen flex flex-col"
-        style={{ backgroundColor: "#fdfaf6" }}
+        className="min-h-screen flex flex-col transition-colors duration-300"
+        style={{ backgroundColor: "var(--bg-page)", color: "var(--text-dark)" }}
       >
         <Navbar />
 

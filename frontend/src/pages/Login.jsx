@@ -137,8 +137,8 @@ export default function Login() {
   };
 
   return (
-    <main className="flex-1 min-h-screen flex items-center justify-center px-6 py-24"
-      style={{ backgroundColor: "#fdfaf6" }}>
+    <main className="flex-1 min-h-screen flex items-center justify-center px-6 py-24 transition-colors duration-300"
+      style={{ backgroundColor: "var(--bg-page)" }}>
 
       {/* Loader overlay when logging in */}
       {loading && <Loader fullPage label="Signing you in..." />}
@@ -173,17 +173,17 @@ export default function Login() {
 
       {/* Login card */}
       <div className="w-full max-w-md rounded-2xl p-8 shadow-sm"
-        style={{ backgroundColor: "#ffffff", border: "1px solid #f0e6e0" }}>
+        style={{ backgroundColor: "var(--bg-card)", border: "1px solid var(--border-card)" }}>
 
         {/* Header */}
         <div className="text-center mb-8">
           <Link to="/">
             <h1 className="text-2xl font-bold mb-1"
-              style={{ fontFamily: "'Playfair Display', serif", color: "#2d1515" }}>
+              style={{ fontFamily: "'Playfair Display', serif", color: "var(--text-primary)" }}>
               Staylytics
             </h1>
           </Link>
-          <p className="text-sm" style={{ color: "#7a5c5c" }}>
+          <p className="text-sm" style={{ color: "var(--text-muted)" }}>
             Sign in to your account
           </p>
         </div>
@@ -214,7 +214,7 @@ export default function Login() {
             <button
               onClick={() => setModalOpen(true)}
               className="text-xs font-medium hover:opacity-70 transition-opacity"
-              style={{ color: "#9b2335" }}
+              style={{ color: "var(--btn-primary)" }}
             >
               Forgot password?
             </button>
@@ -231,9 +231,9 @@ export default function Login() {
 
           {/* Divider */}
           <div className="flex items-center gap-3">
-            <div className="flex-1 h-px" style={{ backgroundColor: "#f0e6e0" }} />
-            <span className="text-xs" style={{ color: "#7a5c5c" }}>or</span>
-            <div className="flex-1 h-px" style={{ backgroundColor: "#f0e6e0" }} />
+            <div className="flex-1 h-px" style={{ backgroundColor: "var(--border-main)" }} />
+            <span className="text-xs" style={{ color: "var(--text-muted)" }}>or</span>
+            <div className="flex-1 h-px" style={{ backgroundColor: "var(--border-main)" }} />
           </div>
 {/* Google renders its button here */}
 <div id="google-signin-btn" className="w-full flex justify-center" />
@@ -254,10 +254,10 @@ export default function Login() {
         </div>
 
         {/* Footer */}
-        <p className="text-center text-xs mt-6" style={{ color: "#7a5c5c" }}>
+        <p className="text-center text-xs mt-6" style={{ color: "var(--text-muted)" }}>
           Don't have an account?{" "}
           <Link to="/register" className="font-semibold hover:opacity-70 transition-opacity"
-            style={{ color: "#9b2335" }}>
+            style={{ color: "var(--btn-primary)" }}>
             Sign up
           </Link>
         </p>

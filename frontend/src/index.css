@@ -19,30 +19,29 @@ body {
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-/* ── DARK THEME (default) ── */
 :root,
 [data-theme="dark"] {
-  --bg-hero: #4a1428;
-  --bg-page: #fdfaf6;
-  --bg-card: #7a2448;
-  --bg-inner: #3d1020;
-  --bg-section: #fdfaf6;
-  --bg-howitworks: #4a1428;
-  --bg-strip: #fdf0f2;
-  --bg-navbar: #ffffff;
+  --bg-page: #15050b;        /* Deep wine-black */
+  --bg-navbar: #1f0811;      /* Deep wine navbar */
+  --bg-hero: #2d0b17;        /* Dark wine hero */
+  --bg-card: #3d1020;        /* Medium dark wine card */
+  --bg-inner: #240713;       /* Deeper wine box */
+  --bg-section: #15050b;     /* Section background matching page */
+  --bg-howitworks: #1f0811;  /* Seamless dark section */
+  --bg-strip: #250815;       /* Warm dark rose strip */
+  --bg-footer: #15050b;      /* Footer background */
 
   --text-primary: #fff9f7;
---text-secondary: #f0d8dc;
---text-muted: #d6aeb6;
---text-accent: #f0a9b5;
-  --text-dark: #2d1515;
-  --bg-footer: #4a1428;
-  --border-main: #f0e6e0;
-  --border-strip: #f0d8dc;
-  --border-card: rgba(232,160,168,0.25);
---bg-howitworks: #4a1428;   /* same as footer — seamless */
+  --text-secondary: #f0d8dc;
+  --text-muted: #bc9ea4;
+  --text-accent: #f0a9b5;
+  --text-dark: #fff9f7;      /* Readable white text in dark mode */
 
-  --btn-primary: #9b2335;
+  --border-main: #3d1424;
+  --border-strip: #4a182d;
+  --border-card: rgba(240, 169, 181, 0.15);
+
+  --btn-primary: #b52c41;    /* Slightly more vibrant brand red for dark mode contrast */
 }
 
 /* ── LIGHT THEME ── */
@@ -67,4 +66,13 @@ body {
   --border-card: rgba(155,35,53,0.15);
   --bg-footer: #e8d0d5;
   --btn-primary: #9b2335;
+}
+
+/* Feature card styles to replace hardcoded Tailwind */
+.feature-card {
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.feature-card:hover {
+  background-color: var(--bg-inner) !important;
 }
