@@ -17,10 +17,10 @@ export default function Hero() {
 
   return (
     <section
-      className="min-h-screen flex items-center px-8 pt-32 pb-24 transition-colors duration-300"
-      style={{ backgroundColor: "var(--bg-hero)" }}
+      className="min-h-screen flex items-center px-8 pt-32 pb-24 transition-colors duration-300 relative overflow-hidden"
+      style={{ background: "var(--bg-hero)" }}
     >
-      <div className="max-w-7xl mx-auto w-full grid md:grid-cols-2 gap-16 items-center">
+      <div className="max-w-7xl mx-auto w-full grid md:grid-cols-2 gap-16 items-center relative z-10">
 
         {/* Left */}
         <div>
@@ -29,15 +29,15 @@ export default function Hero() {
             Review Analytics for Homestays
           </p>
 
-          <h1 className="font-bold leading-tight mb-6"
+          <h1 className="font-bold leading-tight mb-6 transition-colors duration-300"
             style={{
               fontFamily: "'Playfair Display', serif",
               fontSize: "clamp(2.4rem, 4vw, 4rem)",
-              color: "var(--text-primary)",
+              color: "var(--text-accent)",
             }}>
             Your guests are talking.
             <br />
-            <span className="italic" style={{ color: "var(--text-accent)" }}>
+            <span className="italic" style={{ color: "var(--text-accent-alt)" }}>
               Start listening.
             </span>
           </h1>
@@ -51,40 +51,51 @@ export default function Hero() {
 
           <div className="flex flex-wrap gap-4">
             <Link to="/reviews"
-              className="text-white font-semibold px-8 py-3.5 rounded-xl
-                         hover:-translate-y-0.5 hover:shadow-lg transition-all duration-200"
-              style={{ backgroundColor: "var(--btn-primary)" }}>
+              className="text-white font-semibold px-8 py-3.5 rounded-2xl
+                         hover:-translate-y-0.5 hover:shadow-xl transition-all duration-200"
+              style={{ background: "var(--btn-primary)", boxShadow: "0 8px 24px rgba(200, 70, 90, 0.25)" }}>
               Start Analyzing →
             </Link>
             <Link to="/dashboard"
-              className="font-semibold px-8 py-3.5 rounded-xl
-                         hover:opacity-80 transition-all duration-200"
-              style={{ border: "1px solid var(--border-card)", color: "var(--text-accent)" }}>
+              className="font-semibold px-8 py-3.5 rounded-2xl
+                         hover:-translate-y-0.5 hover:shadow-md transition-all duration-200"
+              style={{
+                background: "linear-gradient(135deg, rgba(200, 110, 125, 0.8) 0%, rgba(160, 75, 95, 0.85) 100%)",
+                color: "#ffffff",
+                border: "1px solid rgba(255, 255, 255, 0.25)",
+              }}>
               View Dashboard
             </Link>
           </div>
         </div>
 
         {/* Right — mock card */}
-        <div className="rounded-2xl p-6 transition-colors duration-300"
+        <div className="rounded-3xl p-7 transition-all duration-300 relative theme-card-hover"
           style={{
             backgroundColor: "var(--bg-card)",
-            border: "1px solid var(--border-card)",
-            boxShadow: "0 8px 40px rgba(0,0,0,0.15)",
+            backdropFilter: "blur(24px)",
+            WebkitBackdropFilter: "blur(24px)",
+            border: "1.5px solid var(--border-card)",
+            boxShadow: "0 20px 50px -10px rgba(0,0,0,0.25)",
           }}>
 
           <div className="flex justify-between items-center mb-5">
-            <span className="text-sm font-semibold" style={{ color: "var(--text-accent)" }}>
+            <span className="text-sm font-semibold tracking-wide" style={{ color: "var(--text-accent)" }}>
               Sample Review
             </span>
-            <span className="text-xs font-semibold px-3 py-1 rounded-full"
-              style={{ backgroundColor: "rgba(34,85,34,0.25)", color: "#6dbf6d", border: "1px solid rgba(109,191,109,0.25)" }}>
+            <span className="text-xs font-semibold px-3.5 py-1 rounded-full"
+              style={{ backgroundColor: "rgba(34, 197, 94, 0.2)", color: "#22c55e", border: "1px solid rgba(34, 197, 94, 0.35)" }}>
               Positive
             </span>
           </div>
 
-          <div className="rounded-xl p-4 mb-5 transition-colors duration-300"
-            style={{ backgroundColor: "var(--bg-inner)", border: "1px solid var(--border-card)" }}>
+          <div className="rounded-2xl p-4 mb-5 transition-colors duration-300"
+            style={{
+              backgroundColor: "var(--bg-inner)",
+              backdropFilter: "blur(12px)",
+              WebkitBackdropFilter: "blur(12px)",
+              border: "1px solid var(--border-main)",
+            }}>
             <p className="text-sm leading-relaxed italic" style={{ color: "var(--text-secondary)" }}>
               "The host family was incredibly warm and the local breakfast was
               outstanding. The mountain view was breathtaking. WiFi could be
@@ -93,22 +104,34 @@ export default function Hero() {
           </div>
 
           <p className="text-xs mb-3 uppercase tracking-wider font-semibold"
-            style={{ color: "var(--text-accent)", opacity: 0.7 }}>
+            style={{ color: "var(--text-accent)", opacity: 0.9 }}>
             Tap a theme tag
           </p>
 
           <div className="flex gap-2 flex-wrap mb-3">
-            {tags.map((t) => (
-              <button key={t}
-                onClick={() => setActiveTag(activeTag === t ? null : t)}
-                className="text-xs px-3 py-1.5 rounded-full font-medium transition-all duration-200"
-                style={activeTag === t
-                  ? { backgroundColor: "#9b2335", color: "#fdfaf6", border: "1px solid #9b2335" }
-                  : { backgroundColor: "rgba(155,35,53,0.1)", color: "var(--text-accent)", border: "1px solid var(--border-card)" }
-                }>
-                {t}
-              </button>
-            ))}
+            {tags.map((t, idx) => {
+              const pillColors = [
+                "linear-gradient(135deg, #e27d8e 0%, #c9566a 100%)",
+                "linear-gradient(135deg, #d48293 0%, #b85e71 100%)",
+                "linear-gradient(135deg, #c76f82 0%, #a84b5f 100%)",
+                "linear-gradient(135deg, #b86274 0%, #993f52 100%)",
+                "linear-gradient(135deg, #cc7487 0%, #ad4d62 100%)",
+                "linear-gradient(135deg, #bf677a 0%, #a14457 100%)",
+              ];
+              const isSelected = activeTag === t;
+              return (
+                <button key={t}
+                  onClick={() => setActiveTag(isSelected ? null : t)}
+                  className="text-xs px-3.5 py-1.5 rounded-full font-medium transition-all duration-200 text-white shadow-sm hover:scale-105"
+                  style={{
+                    background: isSelected ? "var(--btn-primary)" : pillColors[idx % pillColors.length],
+                    opacity: isSelected || !activeTag ? 0.92 : 0.55,
+                    border: isSelected ? "1.5px solid #ffffff" : "1px solid rgba(255, 255, 255, 0.2)",
+                  }}>
+                  {t}
+                </button>
+              );
+            })}
           </div>
 
           <div className={`text-xs italic mb-4 min-h-6 transition-all duration-200
@@ -117,20 +140,28 @@ export default function Hero() {
             {activeTag && `Guests mentioned "${activeTag}" in this review.`}
           </div>
 
-          <div className="rounded-xl p-4 transition-colors duration-300"
-            style={{ backgroundColor: "rgba(155,35,53,0.1)", border: "1px solid var(--border-card)" }}>
+          <div className="rounded-2xl p-4 transition-colors duration-300"
+            style={{
+              backgroundColor: "var(--bg-inner)",
+              backdropFilter: "blur(12px)",
+              WebkitBackdropFilter: "blur(12px)",
+              border: "1px solid var(--border-main)",
+            }}>
             <p className="text-xs font-semibold uppercase tracking-wider mb-2"
               style={{ color: "var(--text-accent)" }}>
               AI Suggested Response
             </p>
-            <p className="text-xs leading-relaxed mb-3" style={{ color: "var(--text-secondary)" }}>
+            <p className="text-xs leading-relaxed mb-3.5" style={{ color: "var(--text-secondary)" }}>
               "Thank you for your kind words! We're actively improving WiFi
               connectivity for all our guests and hope to welcome you back soon."
             </p>
             <button onClick={handleCopy}
-              className="w-full text-xs font-semibold py-2.5 rounded-lg transition-all duration-200
-                         text-white hover:-translate-y-0.5 hover:shadow-md"
-              style={{ backgroundColor: copied ? "#2d6a2d" : "#9b2335" }}>
+              className="w-full text-xs font-semibold py-2.5 rounded-xl transition-all duration-200
+                         text-white hover:-translate-y-0.5 hover:shadow-lg"
+              style={{
+                background: copied ? "#16a34a" : "var(--btn-primary)",
+                border: "1px solid rgba(255, 255, 255, 0.15)",
+              }}>
               {copied ? "Copied!" : "Copy Response"}
             </button>
           </div>

@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { useTheme } from "../context/ThemeContext";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
+import HangingLamp from "./HangingLamp";
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
@@ -19,16 +20,21 @@ const handleLogout = () => {
     <nav className="fixed top-0 left-0 w-full z-50 transition-colors duration-300"
       style={{
         backgroundColor: "var(--bg-navbar)",
+        backdropFilter: "blur(18px)",
+        WebkitBackdropFilter: "blur(18px)",
         borderBottom: "1px solid var(--border-main)",
-        boxShadow: "0 2px 8px rgba(0,0,0,0.06)",
+        boxShadow: "0 4px 20px rgba(0,0,0,0.12)",
       }}>
-      <div className="max-w-7xl mx-auto px-8 py-4 flex justify-between items-center">
+      <div className="max-w-7xl mx-auto px-8 py-3.5 flex justify-between items-center">
 
-        {/* Logo */}
-        <Link to="/" className="text-xl font-bold transition-colors duration-300"
-          style={{ fontFamily: "'Playfair Display', serif", color: "var(--text-primary)" }}>
-          Staylytics
-        </Link>
+        {/* Left Corner: Hanging Lamp Theme Toggle + Logo */}
+        <div className="flex items-center gap-1.5">
+          <HangingLamp isDark={isDark} onToggle={toggle} />
+          <Link to="/" className="text-xl font-bold transition-colors duration-300 tracking-tight"
+            style={{ fontFamily: "'Playfair Display', serif", color: "var(--text-primary)" }}>
+            Staylytics
+          </Link>
+        </div>
 
         {/* Desktop links */}
         <div className="hidden md:flex items-center gap-8 text-sm font-medium">

@@ -21,58 +21,114 @@ body {
 
 :root,
 [data-theme="dark"] {
-  --bg-page: #250914;        /* Rich warm burgundy */
-  --bg-navbar: #2e0c1a;      /* Soft deep wine for navbar */
-  --bg-hero: #3a1122;        /* Elegant wine hero background */
-  --bg-card: #4e192f;        /* Medium wine card background */
-  --bg-inner: #2e0c1a;       /* Secondary deep box background */
-  --bg-section: #250914;     /* Section background matching page */
-  --bg-howitworks: #2e0c1a;  /* Deep wine section background */
-  --bg-strip: #330f1c;       /* Warm burgundy strip */
-  --bg-footer: #1e050f;      /* Darkest wine footer */
+  /* ── Dark Mode: Mountain Sunset Twilight & Terracotta Pink ── */
+  --bg-page: #231228;        /* Warm Sunset Dusk base */
+  --bg-navbar: rgba(70, 32, 80, 0.85); /* Lighter vibrant frosted sunset glass navbar */
+  --bg-hero: linear-gradient(180deg, #16122a 0%, #261438 26%, #4a1740 54%, #732244 75%, #ad402d 91%, #cf5925 100%);
+  --bg-card: rgba(56, 22, 64, 0.65); /* Semi-transparent frosted sunset dusk glass finish */
+  --bg-inner: rgba(28, 10, 32, 0.7); /* Deep inset frosted glass container */
+  --bg-section: #231228;     /* Sunset dusk section */
+  --bg-howitworks: linear-gradient(180deg, #281430 0%, #3e1b48 50%, #281430 100%);
+  --bg-strip: #2e1637;       /* Rich sunset dusk strip */
+  --bg-footer: #1a0b20;      /* Deep sunset midnight footer */
 
-  --text-primary: #fff9f7;
-  --text-secondary: #f3dfdf;  /* Lighter text for enhanced readability */
-  --text-muted: #caa6af;      /* Warmer muted rose */
-  --text-accent: #f5b0bb;     /* Rich warm accent pink */
-  --text-dark: #fff9f7; 
+  --text-primary: #fff9fc;    /* Luminous crisp white */
+  --text-secondary: #ebd5e8;  /* Soft lavender-blush */
+  --text-muted: #baa0be;      /* Muted plum-mauve */
+  --text-accent: #e27d8e;     /* Elegant Terracotta Pink */
+  --text-accent-alt: #f0a3b2; /* Soft Terracotta Rose */
+  --text-dark: #fff9fc;
 
-  --border-main: #421626;     /* Wine border */
-  --border-strip: #4d1c2d;
-  --border-card: rgba(245, 176, 187, 0.18);
+  --border-main: rgba(226, 125, 142, 0.2);
+  --border-strip: rgba(226, 125, 142, 0.24);
+  --border-card: rgba(226, 125, 142, 0.28);  /* Terracotta pink glass border */
 
-  --btn-primary: #c23146;    /* Vibrant red-pink for button contrast */
+  --btn-primary: linear-gradient(135deg, #cc4e69 0%, #8e1b43 100%);
+  --btn-primary-hover: linear-gradient(135deg, #db5c77 0%, #9e234e 100%);
 }
 
-/* ── LIGHT THEME ── */
+/* ── Light Mode: Mountain Morning Sunrise ── */
 [data-theme="light"] {
-  --bg-hero: #e8d0d5;        /* light blush wine — hero stands out */
-  --bg-page: #fdfaf6;        /* warm ivory — page base */
-  --bg-card: #f5e8eb;        /* white card on hero */
-  --bg-inner: #f5e0e4;       /* slightly deeper for inner boxes */
-  --bg-section: #fdfaf6;     /* ivory for features section */
-  --bg-strip: #ffffff;       /* white for review strip */
-  --bg-navbar: #ffffff;
---bg-howitworks: #e8d0d5;   /* same as footer — seamless */
+  --bg-page: #fbf5f0;        /* Soft morning sunrise blush */
+  --bg-navbar: rgba(255, 255, 255, 0.7); /* Frosted sunrise white navbar */
+  --bg-hero: linear-gradient(180deg, #cde2f7 0%, #e6f0fa 28%, #fae6da 62%, #fcd5bb 88%, #f8ad78 100%);
+  --bg-card: rgba(255, 255, 255, 0.75); /* Luminous morning frosted glass */
+  --bg-inner: rgba(255, 255, 255, 0.6); /* Soft morning white inset container */
+  --bg-section: #fbf5f0;
+  --bg-howitworks: linear-gradient(180deg, #fbf5f0 0%, #f6e6da 50%, #fbf5f0 100%);
+  --bg-strip: #ffffff;
+  --bg-footer: #fae6da;
 
-  --text-primary: #2d1515;
-  --text-secondary: #5a2030;
-  --text-accent: #9b2335;
-  --text-dark: #2d1515;
-  --text-muted: #7a5c5c;
+  --text-primary: #1e2d42;    /* Deep slate navy */
+  --text-secondary: #3b4d63;  /* Twilight slate text */
+  --text-accent: #d65b74;     /* Terracotta Sunrise Rose */
+  --text-accent-alt: #e8879b; /* Soft Sunrise Peach-Pink */
+  --text-dark: #1e2d42;
+  --text-muted: #6b7f96;      /* Muted sky-slate */
 
-  --border-main: #f0e6e0;
-  --border-strip: #f0d8dc;
-  --border-card: rgba(155,35,53,0.15);
-  --bg-footer: #e8d0d5;
-  --btn-primary: #9b2335;
+  --border-main: rgba(255, 255, 255, 0.7);
+  --border-strip: #edd5c5;
+  --border-card: rgba(255, 255, 255, 0.85); /* Crisp glass border */
+
+  --btn-primary: linear-gradient(135deg, #d65b74 0%, #ba3e58 100%);
+  --btn-primary-hover: linear-gradient(135deg, #e46d85 0%, #c94964 100%);
 }
 
-/* Feature card styles to replace hardcoded Tailwind */
+/* Feature card styles */
 .feature-card {
-  transition: background-color 0.2s ease, transform 0.2s ease;
+  transition: all 0.25s ease;
+  border-bottom: 1px solid var(--border-main);
 }
 
-.feature-card:hover {
+[data-theme="light"] .feature-card:hover {
+  background: linear-gradient(135deg, rgba(255, 248, 235, 0.95) 0%, rgba(255, 238, 230, 0.95) 100%) !important;
+  border-color: rgba(248, 198, 118, 0.6) !important;
+  box-shadow: 0 8px 24px -4px rgba(248, 198, 118, 0.35), 0 0 12px 1px rgba(255, 122, 101, 0.15);
+  transform: translateY(-2px);
+}
+
+[data-theme="dark"] .feature-card:hover {
   background-color: var(--bg-inner) !important;
+  border-color: rgba(245, 176, 195, 0.35) !important;
+  box-shadow: 0 8px 24px -4px rgba(0, 0, 0, 0.5), 0 0 14px 1px rgba(240, 160, 190, 0.2);
+  transform: translateY(-2px);
+}
+
+/* Mock Card & Generic Card Hover */
+.theme-card-hover {
+  transition: all 0.3s ease;
+}
+
+[data-theme="light"] .theme-card-hover:hover {
+  box-shadow: 0 20px 48px -10px rgba(248, 198, 118, 0.4), 0 0 28px 2px rgba(255, 122, 101, 0.2) !important;
+  border-color: rgba(255, 255, 255, 0.95) !important;
+}
+
+[data-theme="dark"] .theme-card-hover:hover {
+  box-shadow: 0 20px 48px -10px rgba(0, 0, 0, 0.7), 0 0 28px 2px rgba(240, 160, 190, 0.2) !important;
+  border-color: rgba(245, 176, 195, 0.4) !important;
+}
+
+/* Lamp Animations */
+@keyframes lampSwing {
+  0% { transform: rotate(0deg); }
+  20% { transform: rotate(10deg); }
+  40% { transform: rotate(-8deg); }
+  60% { transform: rotate(5deg); }
+  80% { transform: rotate(-2deg); }
+  100% { transform: rotate(0deg); }
+}
+
+.lamp-sway {
+  transform-origin: top center;
+  animation: lampSwing 0.8s cubic-bezier(0.36, 0.07, 0.19, 0.97);
+}
+
+@keyframes lampGlowPulse {
+  0%, 100% { opacity: 0.85; filter: drop-shadow(0 0 10px rgba(217, 140, 74, 0.7)); }
+  50% { opacity: 1; filter: drop-shadow(0 0 20px rgba(255, 195, 113, 0.95)); }
+}
+
+.lamp-glow {
+  animation: lampGlowPulse 2.5s ease-in-out infinite;
 }

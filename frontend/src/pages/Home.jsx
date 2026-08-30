@@ -95,7 +95,7 @@ export default function Home() {
             ].map((review, index) => (
               <div
                 key={index}
-                className="rounded-xl px-4 py-4 flex flex-col gap-3"
+                className="rounded-xl px-4 py-4 flex flex-col gap-3 theme-card-hover cursor-default"
                 style={{
                   backgroundColor: "var(--bg-card)",
                   border: "1px solid var(--border-card)",
@@ -217,7 +217,7 @@ export default function Home() {
                 key={step.n}
                 className="pt-8"
                 style={{
-                  borderTop: "1px solid rgba(232,160,168,0.25)",
+                  borderTop: "1px solid var(--border-main)",
                 }}
               >
                 <div
