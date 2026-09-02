@@ -3,7 +3,7 @@ from typing import List, Optional
 from pydantic import BaseModel
 from models.review import ReviewCreate, ReviewUpdate
 from database import supabase
-from auth import verify_token
+from auth import verify_token, get_optional_token
 from gemini import analyze_review_with_ai, fetch_online_hotel_reviews
 
 router = APIRouter()
@@ -206,12 +206,25 @@ def get_single_review(
 @router.post("/", response_model=dict, status_code=201)
 def create_review(
     review: ReviewCreate,
-    user: dict = Depends(verify_token),
+    user: Optional[dict] = Depends(get_optional_token),
 ):
     ai_result = analyze_review_with_ai(
         review.review_text,
         review.guest_name,
     )
+
+    if not user:
+        return {
+            "id": None,
+            "guest_name": review.guest_name,
+            "review_text": review.review_text,
+            "sentiment": ai_result["sentiment"],
+            "themes": ai_result["themes"],
+            "ai_response": ai_result["ai_response"],
+            "rating": review.rating if review.rating else None,
+            "user_id": None,
+            "is_guest": True,
+        }
 
     new_review = {
         "guest_name": review.guest_name,
@@ -378,7 +391,7 @@ def reanalyze_all_reviews(
 @router.post("/fetch-online")
 def fetch_online_reviews_endpoint(
     req: FetchReviewsRequest,
-    user: dict = Depends(verify_token),
+    user: Optional[dict] = Depends(get_optional_token),
 ):
     if not req.hotel_name or not req.hotel_name.strip():
         raise HTTPException(status_code=400, detail="Hotel / Homestay name is required")

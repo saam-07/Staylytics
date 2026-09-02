@@ -27,6 +27,8 @@ def create_token(data: dict) -> str:
     to_encode.update({"exp": expire})
     return jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
 
+optional_security = HTTPBearer(auto_error=False)
+
 def verify_token(credentials: HTTPAuthorizationCredentials = Security(security)):
     try:
         payload = jwt.decode(
@@ -38,9 +40,20 @@ def verify_token(credentials: HTTPAuthorizationCredentials = Security(security))
         return payload
     except JWTError:
         raise HTTPException(status_code=401, detail="Invalid or expired token")
-    
-    def verify_token_payload(token: str):
-        """Verify token and return payload — raises exception if invalid"""
+
+def get_optional_token(credentials: HTTPAuthorizationCredentials = Security(optional_security)):
+    if not credentials:
+        return None
+    try:
+        payload = jwt.decode(
+            credentials.credentials, SECRET_KEY, algorithms=[ALGORITHM]
+        )
+        return payload
+    except JWTError:
+        return None
+
+def verify_token_payload(token: str):
+    """Verify token and return payload — raises exception if invalid"""
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
         return payload

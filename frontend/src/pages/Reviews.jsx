@@ -85,7 +85,7 @@ export default function Reviews() {
       }, 100);
     } catch (err) {
       console.error(err);
-      setError("Failed to generate response. Please ensure backend is running.");
+      setError(err.message || "Failed to generate response. Please ensure backend is running.");
     } finally {
       setLoading(false);
       setAnalyzingIndex(null);
@@ -110,7 +110,7 @@ export default function Reviews() {
       await fetchReviews();
     } catch (err) {
       console.error(err);
-      setError("Failed to connect to backend. Make sure it's running.");
+      setError(err.message || "Failed to connect to backend. Make sure it's running.");
     } finally {
       setLoading(false);
     }
