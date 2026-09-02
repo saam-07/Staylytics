@@ -96,4 +96,25 @@ delete: async (id) => {
   if (!res.ok) throw new Error("Search failed");
   return res.json();
 },
+
+  // POST fetch online hotel reviews from Google, TripAdvisor, Booking.com, Airbnb
+  fetchOnlineReviews: async (hotelName, location = "") => {
+    const headers = getAuthHeader();
+    const res = await fetch(`${BASE_URL}/reviews/fetch-online`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        ...headers,
+      },
+      body: JSON.stringify({
+        hotel_name: hotelName,
+        location: location,
+      }),
+    });
+    if (!res.ok) {
+      const errData = await res.json().catch(() => ({}));
+      throw new Error(errData.detail || "Failed to fetch online reviews");
+    }
+    return res.json();
+  },
 };

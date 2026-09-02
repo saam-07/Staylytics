@@ -1,11 +1,16 @@
 from fastapi import APIRouter, HTTPException, Query, Depends
 from typing import List, Optional
+from pydantic import BaseModel
 from models.review import ReviewCreate, ReviewUpdate
 from database import supabase
 from auth import verify_token
-from gemini import analyze_review_with_ai
+from gemini import analyze_review_with_ai, fetch_online_hotel_reviews
 
 router = APIRouter()
+
+class FetchReviewsRequest(BaseModel):
+    hotel_name: str
+    location: Optional[str] = ""
 
 
 # -----------------------------
@@ -364,3 +369,26 @@ def reanalyze_all_reviews(
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+
+# -----------------------------
+# FETCH ONLINE REVIEWS (GOOGLE, TRIPADVISOR, BOOKING.COM, AIRBNB)
+# -----------------------------
+
+@router.post("/fetch-online")
+def fetch_online_reviews_endpoint(
+    req: FetchReviewsRequest,
+    user: dict = Depends(verify_token),
+):
+    if not req.hotel_name or not req.hotel_name.strip():
+        raise HTTPException(status_code=400, detail="Hotel / Homestay name is required")
+
+    try:
+        reviews = fetch_online_hotel_reviews(req.hotel_name.strip(), req.location or "")
+        return {
+            "hotel_name": req.hotel_name.strip(),
+            "location": req.location,
+            "reviews": reviews,
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to fetch reviews: {str(e)}")

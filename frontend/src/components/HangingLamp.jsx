@@ -15,7 +15,7 @@ export default function HangingLamp({ isDark, onToggle }) {
       className={`relative cursor-pointer select-none group flex flex-col items-center -mt-3.5 mr-1.5 transition-transform duration-200 ${
         swaying ? "lamp-sway" : "hover:scale-105"
       }`}
-      title={isDark ? "Touch lamp to switch to Sunrise Blush ☀️" : "Touch lamp to switch to Twilight Plum Night 🌙"}
+      title={isDark ? "Touch lamp to switch to Sunrise Blush" : "Touch lamp to switch to Twilight Plum Night"}
       style={{ width: "36px", height: "50px" }}
       role="button"
       tabIndex={0}
